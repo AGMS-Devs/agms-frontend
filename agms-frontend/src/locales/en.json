@@ -1,0 +1,25 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Operation successful",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "auth": {
+    "login": {
+      "title": "Automated Graduation\nManagement System",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "forgotPassword": "Forgot Password",
+      "error": {
+        "title": "Login Failed",
+        "message": "Invalid username or password",
+        "invalidEmail": "Please enter a valid email address"
+      }
+    }
+  }
+} 
