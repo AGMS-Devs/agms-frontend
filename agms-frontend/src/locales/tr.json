@@ -1,0 +1,25 @@
+{
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "success": "İşlem başarılı",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle"
+  },
+  "auth": {
+    "login": {
+      "title": "Otomatik Mezuniyet\nYönetim Sistemi",
+      "email": "E-posta",
+      "password": "Şifre",
+      "submit": "Giriş Yap",
+      "forgotPassword": "Şifremi Unuttum",
+      "error": {
+        "title": "Giriş Başarısız",
+        "message": "Kullanıcı adı veya şifre hatalı",
+        "invalidEmail": "Lütfen geçerli bir e-posta adresi giriniz"
+      }
+    }
+  }
+} 

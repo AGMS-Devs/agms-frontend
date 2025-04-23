@@ -1,5 +1,5 @@
 // src/app/login/page.tsx
-import LoginPage from '@/components/login-page'
+import LoginPage from '@/pages/auth/login'
 
 export default function Login() {
   return <LoginPage />

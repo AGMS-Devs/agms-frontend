@@ -1,4 +1,3 @@
-// src/components/login-page.tsx
 'use client'
 
 import Image from 'next/image'
@@ -9,46 +8,80 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from 'lucide-react'
 import { cn } from "@/lib/utils"
+import { t, setLanguage, getLanguage } from "@/lib/i18n"
+import { authenticate } from '@/lib/auth'
+import { useRouter } from 'next/navigation'
+import { useToast } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster"
+
+// Türkçe'ye geçiş
+setLanguage('tr');
+
+// İngilizce'ye geçiş
+setLanguage('en');
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('')
+  const router = useRouter()
+  const { toast } = useToast()
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [lang, setLang] = useState<'en' | 'tr'>('en')
+  const [emailError, setEmailError] = useState('')
+  const [lang, setLang] = useState<'en' | 'tr'>(getLanguage())
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setEmail(value)
+  }
+
+  const handleEmailBlur = () => {
+    if (email && !validateEmail(email)) {
+      setEmailError(t('auth.login.error.invalidEmail'))
+    } else {
+      setEmailError('')
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
+    
+    if (!validateEmail(email)) {
+      setEmailError(t('auth.login.error.invalidEmail'))
+      return
+    }
+
     setIsLoading(true)
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      console.log('Login attempted:', { username, password })
+      const response = await authenticate(email, password)
+      if (response.success) {
+        router.push('/dashboard')
+      } else {
+        toast({
+          variant: "destructive",
+          title: t('auth.login.error.title'),
+          description: t('auth.login.error.message'),
+        })
+      }
     } catch (err) {
-      setError(lang === 'en' ? 'Invalid username or password' : 'Geçersiz kullanıcı adı veya parola')
+      toast({
+        variant: "destructive",
+        title: t('auth.login.error.title'),
+        description: t('auth.login.error.message'),
+      })
     } finally {
       setIsLoading(false)
     }
   }
 
-  const content = {
-    en: {
-      title: 'Automated Graduation System',
-      username: 'Username',
-      password: 'Password',
-      forgotPassword: 'Forgot password?',
-      login: 'Login',
-      signingIn: 'Signing in...',
-    },
-    tr: {
-      title: 'Otomatik Mezuniyet Sistemi',
-      username: 'Kullanıcı Adı',
-      password: 'Parola',
-      forgotPassword: 'Parolanızı mı unuttunuz?',
-      login: 'Giriş Yap',
-      signingIn: 'Giriş yapılıyor...',
-    }
+  const handleLanguageChange = (newLang: 'en' | 'tr') => {
+    setLang(newLang)
+    setLanguage(newLang)
   }
 
   return (
@@ -59,23 +92,24 @@ export default function LoginPage() {
         backdropFilter: 'blur(4px)'
       }}
     >
+      <Toaster />
       {/* Language switcher - positioned in the top-right corner */}
       <div className="absolute right-6 top-6 z-50">
         <div className="flex overflow-hidden rounded-md bg-black/30 backdrop-blur-sm">
           <button
-            onClick={() => setLang('tr')}
+            onClick={() => handleLanguageChange('tr')}
             className={cn(
               "px-3 py-1 text-sm font-medium transition-colors",
-              lang === 'tr' ? "bg-white text-black" : "text-white hover:bg-white/10"
+              lang === 'tr' ? "bg-white text-black" : "text-white hover:bg-white/10 cursor-pointer"
             )}
           >
             TR
           </button>
           <button
-            onClick={() => setLang('en')}
+            onClick={() => handleLanguageChange('en')}
             className={cn(
               "px-3 py-1 text-sm font-medium transition-colors",
-              lang === 'en' ? "bg-white text-black" : "text-white hover:bg-white/10"
+              lang === 'en' ? "bg-white text-black" : "text-white hover:bg-white/10 cursor-pointer"
             )}
           >
             EN
@@ -100,40 +134,46 @@ export default function LoginPage() {
                   />
                 </div>
 
-                <h1 className="text-center text-2xl font-semibold text-gray-900">
-                  {content[lang].title}
+                <h1 className="text-center text-2xl font-semibold text-gray-900 whitespace-pre-line">
+                  {t('auth.login.title')}
                 </h1>
 
                 <div className="w-full space-y-6">
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="username" className="text-sm font-medium">
-                        {content[lang].username}
+                      <Label htmlFor="email" className="text-sm font-medium">
+                        {t('auth.login.email')}
                       </Label>
                       <Input
-                        id="username"
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={handleEmailChange}
+                        onBlur={handleEmailBlur}
                         className={cn(
                           "transition-all duration-200 focus:ring-2 focus:ring-[#8B0000]/20",
-                          error && "border-red-500 focus:ring-red-500/20"
+                          emailError && "border-red-500 focus:ring-red-500/20"
                         )}
                         disabled={isLoading}
                         required
                       />
+                      {emailError && (
+                        <p className="mt-1 text-xs text-red-500">
+                          {emailError}
+                        </p>
+                      )}
                     </div>
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <Label htmlFor="password" className="text-sm font-medium">
-                          {content[lang].password}
+                          {t('auth.login.password')}
                         </Label>
                         <Link
                           href="/forgot-password"
                           className="text-xs text-[#8B0000] hover:text-[#660000] transition-colors"
                         >
-                          {content[lang].forgotPassword}
+                          {t('auth.login.forgotPassword')}
                         </Link>
                       </div>
                       <Input
@@ -142,32 +182,25 @@ export default function LoginPage() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className={cn(
-                          "transition-all duration-200 focus:ring-2 focus:ring-[#8B0000]/20",
-                          error && "border-red-500 focus:ring-red-500/20"
+                          "transition-all duration-200 focus:ring-2 focus:ring-[#8B0000]/20"
                         )}
                         disabled={isLoading}
                         required
                       />
                     </div>
 
-                    {error && (
-                      <div className="text-sm text-red-500">
-                        {error}
-                      </div>
-                    )}
-
                     <Button
                       type="submit"
-                      className="relative w-full overflow-hidden bg-[#8B0000] transition-all duration-300 hover:bg-[#660000]"
+                      className="relative w-full overflow-hidden bg-[#8B0000] transition-all duration-300 hover:bg-[#660000] cursor-pointer"
                       disabled={isLoading}
                     >
                       {isLoading ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {content[lang].signingIn}
+                          {t('common.loading')}
                         </>
                       ) : (
-                        content[lang].login
+                        t('auth.login.submit')
                       )}
                     </Button>
                   </form>
@@ -179,4 +212,4 @@ export default function LoginPage() {
       </div>
     </div>
   )
-}
+} 
