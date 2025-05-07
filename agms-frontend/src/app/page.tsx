@@ -1,6 +1,6 @@
-// src/app/login/page.tsx
-import LoginPage from '@/pages/auth/login'
+// src/app/page.tsx
+import AuthPage from '@/pages/auth'
 
 export default function Login() {
-  return <LoginPage />
+  return <AuthPage />
 }
