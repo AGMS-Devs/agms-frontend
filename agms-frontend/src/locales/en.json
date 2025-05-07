@@ -10,11 +10,23 @@
   },
   "auth": {
     "login": {
+      "login": "Login",
+      "register": "Register",
+      "logginIn": "Logging in...",
+      "registering": "Registering...",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "noAccount": "Don't have an account?",
+      "haveAccount": "Already have an account?",
       "title": "Automated Graduation\nManagement System",
       "email": "Email",
       "password": "Password",
+      "confirmPassword": "Confirm Password",
       "submit": "Login",
       "forgotPassword": "Forgot Password",
+      "sending": "Sending...",
+      "sendNewPassword": "Send New Password",
+      "backToLogin": "Back to Login",
       "error": {
         "title": "Login Failed",
         "message": "Invalid username or password",
@@ -22,4 +34,4 @@
       }
     }
   }
-} 
+}
