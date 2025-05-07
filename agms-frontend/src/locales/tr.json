@@ -10,11 +10,23 @@
   },
   "auth": {
     "login": {
+      "login": "Giriş Yap",
+      "register": "Kayıt Ol",
+      "logginIn": "Giriş yapılıyor...",
+      "registering": "Kayıt olunuyor...",
+      "firstName": "Ad",
+      "lastName": "Soyad",
+      "noAccount": "Hesabınız yok mu?",
+      "haveAccount": "Zaten hesabınız var mı?",
       "title": "Otomatik Mezuniyet\nYönetim Sistemi",
       "email": "E-posta",
       "password": "Şifre",
+      "confirmPassword": "Şifreyi Onayla",
       "submit": "Giriş Yap",
       "forgotPassword": "Şifremi Unuttum",
+      "sending": "Gönderiliyor...",
+      "sendNewPassword": "Yeni Şifre Gönder",
+      "backToLogin": "Giriş Ekranına Dön",
       "error": {
         "title": "Giriş Başarısız",
         "message": "Kullanıcı adı veya şifre hatalı",
@@ -22,4 +34,4 @@
       }
     }
   }
-} 
+}
