@@ -6,7 +6,9 @@
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
-    "edit": "Edit"
+    "edit": "Edit",
+    "settings": "Profile Settings",
+    "logout": "Logout"
   },
   "auth": {
     "login": {

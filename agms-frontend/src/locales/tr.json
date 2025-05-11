@@ -6,7 +6,9 @@
     "save": "Kaydet",
     "cancel": "İptal",
     "delete": "Sil",
-    "edit": "Düzenle"
+    "edit": "Düzenle",
+    "settings": "Profil Ayarları",
+    "logout": "Çıkış Yap"
   },
   "auth": {
     "login": {
