@@ -11,7 +11,7 @@ import { t, setLanguage, getLanguage } from "@/lib/i18n"
 import { useRouter } from 'next/navigation'
 import { useToast } from "@/components/ui/use-toast"
 import { Toaster } from "@/components/ui/toaster"
-import { register as registerUser, authenticate, sendPasswordResetCode } from '@/lib/auth'
+import { authService } from '@/services/auth.service'
 
 export default function AuthPage() {
   const router = useRouter()
@@ -74,7 +74,7 @@ export default function AuthPage() {
     }
     setLoginIsLoading(true)
     try {
-      const data = await authenticate(loginEmail, loginPassword)
+      const data = await authService.login(loginEmail, loginPassword)
       if (data.success) {
         toast({ title: 'Login successful' })
         router.push('/home')
@@ -131,12 +131,12 @@ export default function AuthPage() {
     }
     setRegisterIsLoading(true)
     try {
-      const result = await registerUser(
-        registerData.email,
-        registerData.password,
-        registerData.firstName,
-        registerData.lastName
-      );
+      const result = await authService.register({
+        email: registerData.email,
+        password: registerData.password,
+        firstName: registerData.firstName,
+        lastName: registerData.lastName
+      });
       if (result.success) {
         toast({
           title: 'Registration successful',
@@ -170,7 +170,7 @@ export default function AuthPage() {
     }
     setForgotIsLoading(true)
     try {
-      const result = await sendPasswordResetCode(forgotEmail)
+      const result = await authService.forgotPassword(forgotEmail)
       if (result.success) {
         toast({
           title: 'Success',

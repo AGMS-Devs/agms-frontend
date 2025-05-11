@@ -1,161 +1,144 @@
+import '@/app/globals.css';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getCurrentUser, logout } from '@/lib/auth';
-import { User } from '@/lib/users';
-import { FiLogOut, FiBell, FiUser } from 'react-icons/fi';
+import { FiLogOut, FiBell, FiUser, FiGlobe, FiMenu } from 'react-icons/fi';
 import { Input } from '@/components/ui/input';
+import { User } from '@/services/users.service';
+import { authService } from '@/services/auth.service';
+import { useToast } from "@/components/ui/use-toast";
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ProgressBar } from '@/components/ui/progress';
+import { Navbar } from '@/components/ui/navbar';
 
 export default function HomePage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Bölüme göre mezuniyet şartları
+  const departmentRequirements: Record<string, {
+    ectsTotal: number;
+    minGpa: number;
+    requiredCourses: string[];
+  }> = {
+    'Computer Engineering': {
+      ectsTotal: 150,
+      minGpa: 2.0,
+      requiredCourses: ['CENG101', 'CENG102', 'CENG103'],
+    },
+    'Electrical Engineering': {
+      ectsTotal: 170,
+      minGpa: 2.2,
+      requiredCourses: ['EE101', 'EE102', 'EE201'],
+    },
+    // Diğer bölümler eklenebilir
+  };
 
   useEffect(() => {
-    const u = getCurrentUser();
-    setUser(u);
-    if (!u) {
-      router.push('/'); // Redirect to login if not authenticated
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
+      setUser(currentUser);
+    } else {
+      router.push('/');
     }
+    setIsLoading(false);
   }, [router]);
 
-  if (!user) return null; // or a loading spinner
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      router.push('/');
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to logout.'
+      });
+    }
+  };
 
-  const handleLogout = () => {
-    logout();
-    router.push('/'); // Redirect to login after logout
+  if (isLoading) return null;
+  if (!user) return null;
+
+  // Kullanıcının bölümüne göre şartları al
+  const dept = user.department;
+  const req = departmentRequirements[dept] || departmentRequirements['Computer Engineering'];
+
+  // Demo graduation data (kullanıcıya göre dinamik)
+  const graduation = {
+    department: dept,
+    eligibility: false,
+    ectsCompleted: 120, // Bunu user datasından da alabilirsin
+    ectsTotal: req.ectsTotal,
+    gpa: 2.85,
+    gpaEligible: 2.85 >= req.minGpa,
+    requiredCourses: req.requiredCourses,
   };
 
   return (
-    <div>
-      {/* Top Navbar */}
-      <nav
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '10px 20px',
-          backgroundColor: '#8b0000',
-          color: 'white',
-          borderBottom: '1px solid #ddd',
-        }}
-      >
-        {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img
-            src="/iztech-logo.png"
-            alt="IYTE Logo"
-            style={{
-              height: '50px',
-              width: 'auto',
-              marginRight: '10px',
-            }}
-          />
-          <span style={{ fontSize: '20px', fontWeight: 'bold' }}>IZTECH</span>
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar userName={user.name} onLogout={handleLogout} />
+      {/* Main Content */}
 
-        {/* Search Bar */}
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-          <Input
-            type="text"
-            placeholder="Search..."
-            style={{
-              width: '50%',
-              padding: '5px 10px',
-              border: '1px solid #ddd',
-              borderRadius: '4px',
-            }}
-          />
-        </div>
-
-        {/* Notifications and User Dropdown */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          {/* Notifications */}
-          <button
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              fontSize: '20px',
-            }}
-          >
-            <FiBell />
-          </button>
-
-          {/* User Dropdown */}
-          <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-            <FiUser style={{ marginRight: '5px', fontSize: '20px' }} />
-            <span>{user.name}</span>
-          </div>
-
-          {/* Logout */}
-          <button
-            onClick={handleLogout}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              padding: '5px 10px',
-              cursor: 'pointer',
-              background: 'none',
-              border: 'none',
-              color: 'white',
-            }}
-          >
-            <FiLogOut style={{ marginRight: '5px' }} /> Logout
-          </button>
-        </div>
-      </nav>
-
-      {/* Default Home Page Content */}
-      <div style={{ padding: '20px' }}>
-        <h1 style={{ color: '#8b0000', fontSize: '24px', fontWeight: 'bold' }}>
-          Welcome, {user.name}
-        </h1>
-        <p style={{ fontSize: '18px', marginBottom: '20px', color: '#333' }}>
-          This is the Automated Graduation Management System (AGMS) home page.
-        </p>
-
-        {/* AGMS Rules Section */}
-        <div
-          style={{
-            backgroundColor: '#f9f9f9',
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            padding: '20px',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-          }}
-        >
-          <h2 style={{ color: '#8b0000', marginBottom: '10px', fontSize: '20px' }}>
-            AGMS Rules
-          </h2>
-          <ul style={{ lineHeight: '1.8', fontSize: '16px', color: '#555' }}>
-        {/* Graduation Process Section */}
-            <li>
-              <strong>Tracking Graduation Status:</strong> Upon logging in, you will see a Graduation Status Panel on the main page. Your completed ECTS credits, courses, and GPA will be displayed automatically.
-            </li>
-            <li>
-              <strong>Notification of Missing Requirements:</strong> If you do not meet a requirement for graduation (e.g., missing courses, insufficient credits), the system will notify you automatically. Details on how to resolve these deficiencies will also be provided in this panel.
-            </li>
-            <li>
-              <strong>Advisor Approval:</strong> Your documents will be sent to your advisor for review through the system. Your advisor will check your transcript and eligibility for graduation. Once approved, you will receive a notification.
-            </li>
-            <li>
-              <strong>Faculty and Administrative Approvals:</strong> After advisor approval, your documents will be forwarded to the department secretary and the faculty dean. You can monitor the progress of these approvals through the system.
-            </li>
-            <li>
-              <strong>Severance Process:</strong> The system will guide you through the severance process, including requirements from the library, financial office, and SKS (Health, Culture, and Sports). You will see which clearances have been completed and which are still pending.
-            </li>
-            <li>
-              <strong>Graduation Ceremony Preparations:</strong> Information about your graduation ceremony participation, including date, time, and gown collection details, will be provided through the system.
-            </li>
-            <li>
-              <strong>Diploma Process:</strong> Once all graduation criteria are met, your diploma preparation will begin, and your diploma number will be assigned. You will be informed when and where to collect your diploma.
-            </li>
-            <li>
-              <strong>Real-Time Notifications and Communication:</strong> You will receive real-time updates via SMS or email for each step of the process. Additionally, you can contact your advisor or relevant department through the messaging feature in the system.
-            </li>
-          </ul>
-        </div>
-      </div>
+      <main className="max-w-3xl mx-auto py-10 px-4">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">{graduation.department}</h1>
+        {user.role === 'student' ? (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-xl">Graduation Status</CardTitle>
+              <Badge variant={graduation.eligibility ? 'success' : 'destructive'}>
+                {graduation.eligibility ? 'Complete' : 'Incomplete'}
+              </Badge>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <div className="text-sm font-medium text-gray-700">Graduation Eligibility</div>
+                <div className="text-lg font-semibold text-gray-900">
+                  {graduation.eligibility ? 'Complete' : 'Incomplete'}
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm font-medium text-gray-700">ECTS Completed</span>
+                  <span className="text-xs text-gray-600">{graduation.ectsCompleted}/{graduation.ectsTotal}</span>
+                </div>
+                <ProgressBar value={graduation.ectsCompleted / graduation.ectsTotal * 100} />
+                <div className="text-xs text-gray-500 mt-1">
+                  The student needs to complete {graduation.ectsTotal - graduation.ectsCompleted} more ECTS.
+                </div>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-gray-700">GPA</div>
+                <div className="text-base text-gray-900">
+                  Current GPA: <span className="font-semibold">{graduation.gpa}</span> {graduation.gpaEligible && <span className="ml-2 text-green-600 text-xs">(Eligible for graduation)</span>}
+                </div>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-gray-700">Required Courses</div>
+                <div className="text-base text-gray-900">
+                  {graduation.requiredCourses.join(', ')}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Welcome, {user.name}!</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="text-gray-700 text-base">
+                This is the AGMS system. You are logged in as <span className="font-semibold">{user.role.replace(/^(.)/, c => c.toUpperCase())}</span>.
+              </div>
+              <div className="text-gray-500 text-sm">
+                Graduation status is only visible for students. Please use the menu to access your role-specific features.
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </main>
     </div>
   );
 }
