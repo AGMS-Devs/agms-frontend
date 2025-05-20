@@ -3,7 +3,7 @@ export interface User {
   email: string;
   name: string;
   department: string;
-  role: 'admin' | 'user' | 'student' | 'advisor' | 'library' | 'faculty' | 'rectorate'; // daha fazla eklenebilir.
+    role: 'student' | 'library' | 'sks' | 'doitp' | 'career' | 'studentAffairs'; // güncel roller burada
   graduationStatus: {
     isEligible: boolean;
     requirements: {

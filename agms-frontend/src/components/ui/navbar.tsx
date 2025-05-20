@@ -1,4 +1,4 @@
-import { FiLogOut, FiBell, FiUser, FiGlobe, FiMenu, FiSettings, FiAward } from 'react-icons/fi';
+import { FiLogOut,FiClipboard, FiBell, FiUser, FiGlobe, FiMenu, FiSettings, FiAward } from 'react-icons/fi';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
+import { authService } from '@/services/auth.service';
+
 
 interface NavbarProps {
   userName: string;
@@ -45,6 +47,25 @@ export function Navbar({ userName, onLogout }: NavbarProps) {
           <FiAward size={16} />
           Graduation Status
         </Link>
+
+        <button
+          onClick={() => {
+            const user = authService.getCurrentUser();
+            const role = user?.role;
+
+            if (role === 'student') router.push('/severance-requests/student');
+            else if (role === 'library') router.push('/severance-requests/library');
+            else if (role === 'sks') router.push('/severance-requests/sks');
+            else if (role === 'doitp') router.push('/severance-requests/doitp');
+            else if (role === 'career') router.push('/severance-requests/careeroffice');
+            else if (role === 'studentAffairs') router.push('/severance-requests/studentaffairs');
+            else router.push('/');
+          }}
+          className="flex items-center gap-1 text-gray-700 hover:text-blue-700 font-medium text-sm ml-4 transition-colors duration-200"
+        >
+          <FiClipboard size={16} />
+          Severance Requests
+        </button>
       </div>
 
       <div className="flex-1 max-w-lg mx-6 hidden md:block">
