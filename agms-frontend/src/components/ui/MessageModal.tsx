@@ -1,79 +1,154 @@
 "use client";
+
 import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onSend: (message: {
-    receiverId: string;
-    body: string;
-    file?: File | null;
-  }) => void;
+  onSend: (data: { receiverId: string; body: string; file?: File }) => void;
 }
 
 export default function MessageModal({ isOpen, onClose, onSend }: Props) {
   const [receiverId, setReceiverId] = useState("");
   const [body, setBody] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [showDraftPrompt, setShowDraftPrompt] = useState(false);
+  const [error, setError] = useState("");
 
-  if (!isOpen) return null;
+  const resetState = () => {
+    setReceiverId("");
+    setBody("");
+    setFile(null);
+    setError("");
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+
+    const allowedTypes = ["application/pdf", "image/png", "image/jpeg"];
+    const maxSize = 2 * 1024 * 1024; // 2MB
+
+    if (!allowedTypes.includes(selectedFile.type)) {
+      setError("File format not supported");
+      return;
+    }
+
+    if (selectedFile.size > maxSize) {
+      setError("File size not supported");
+      return;
+    }
+
+    setError("");
+    setFile(selectedFile);
+  };
+
+  const handleSend = () => {
+    if (!receiverId || !body) {
+      setError("Please fill all fields.");
+      return;
+    }
+
+    // Eğer bir dosya varsa ve hata varsa → gönderme
+    if (error) {
+      return; // ❌ dosya hatası varsa mesaj gönderme
+    }
+
+    onSend({ receiverId, body, file: file || undefined });
+    resetState();
+    onClose();
+  };
+
+  const handleCancel = () => {
+    setShowDraftPrompt(true); // Show draft/discard modal
+  };
+
+  const confirmDiscard = () => {
+    resetState();
+    setShowDraftPrompt(false);
+    onClose();
+  };
+
+  const saveAsDraft = () => {
+    console.log("Saving draft: ", { receiverId, body, file });
+    setShowDraftPrompt(false);
+    onClose();
+  };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-xl shadow-lg w-[400px] space-y-4">
-        <h2 className="text-xl font-semibold">Send Message</h2>
+    <>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="space-y-4">
+          <DialogHeader>Send Message</DialogHeader>
 
-        <input
-          placeholder="Student ID"
-          className="w-full border px-3 py-2 rounded"
-          value={receiverId}
-          onChange={(e) => setReceiverId(e.target.value)}
-        />
-
-        <textarea
-          placeholder="Your message..."
-          className="w-full border px-3 py-2 rounded"
-          rows={4}
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-        />
-
-        <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">
-            Attachment
-          </label>
-
-          <label
-            htmlFor="file-upload"
-            className="flex items-center gap-2 cursor-pointer rounded border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          >
-            📎 Choose File
-            <span className="text-xs text-gray-500">
-              {file ? file.name : "No file selected"}
-            </span>
-            <input
-              id="file-upload"
-              name="file-upload"
-              type="file"
-              className="sr-only"
-              accept=".pdf,.jpg,.png"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
+          <div>
+            <Input
+              value={receiverId}
+              onChange={(e) => setReceiverId(e.target.value)}
+              placeholder="Student ID"
             />
-          </label>
-        </div>
+          </div>
 
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded">
-            Cancel
-          </button>
-          <button
-            onClick={() => onSend({ receiverId, body, file })}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
-          >
-            Send
-          </button>
-        </div>
-      </div>
-    </div>
+          <div>
+            <Label>Message</Label>
+            <textarea
+              className="w-full border rounded p-2 text-sm"
+              rows={4}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <Label>Attachment (optional)</Label>
+            <Input type="file" onChange={handleFileChange} />
+            {file && (
+              <p className="text-xs text-gray-500">Selected: {file.name}</p>
+            )}
+          </div>
+
+          {error && <p className="text-red-600 text-sm">{error}</p>}
+
+          <div className="flex justify-end gap-2">
+            <button
+              className="px-3 py-1 rounded bg-gray-200 text-sm"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+            <button
+              className="px-4 py-1 rounded bg-blue-600 text-white text-sm"
+              onClick={handleSend}
+            >
+              Send
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Draft/Discard Modal */}
+      <Dialog open={showDraftPrompt} onOpenChange={setShowDraftPrompt}>
+        <DialogContent className="text-center space-y-4">
+          <DialogHeader>Do you want to save this message?</DialogHeader>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={saveAsDraft}
+              className="px-4 py-1 bg-yellow-400 rounded text-sm"
+            >
+              Save as Draft
+            </button>
+            <button
+              onClick={confirmDiscard}
+              className="px-4 py-1 bg-red-500 text-white rounded text-sm"
+            >
+              Discard
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

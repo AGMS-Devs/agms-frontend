@@ -143,7 +143,7 @@ export function Navbar({ userName, onLogout, onSidebarToggle, isSidebarOpen }: N
                   method: "POST",
                   body: formData,
                 })
-                  .then(() => alert("Message sent!"))
+                  .then(() => alert("Message delivered."))
                   .catch(() => alert("Error sending message."));
                 setIsModalOpen(false);
               }}
