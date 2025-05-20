@@ -1,0 +1,138 @@
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  FiHome,
+  FiClipboard,
+  FiAward,
+  FiMessageSquare,
+  FiSettings,
+  FiChevronLeft,
+  FiMenu,
+} from "react-icons/fi";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { authService } from "@/services/auth.service";
+
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+  isOpen?: boolean;
+  onToggle?: () => void;
+}
+
+export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const user = authService.getCurrentUser();
+
+  const handleSeveranceRequestClick = () => {
+    const role = user?.role;
+    if (role === "student") router.push("/severance-requests/student");
+    else if (role === "library") router.push("/severance-requests/library");
+    else if (role === "sks") router.push("/severance-requests/sks");
+    else if (role === "doitp") router.push("/severance-requests/doitp");
+    else if (role === "career") router.push("/severance-requests/careeroffice");
+    else if (role === "studentAffairs") router.push("/severance-requests/studentaffairs");
+    else router.push("/");
+  };
+
+  const routes = [
+    {
+      label: "Home",
+      icon: FiHome,
+      href: "/home",
+      color: "text-sky-500",
+    },
+    {
+      label: "Severance Requests",
+      icon: FiClipboard,
+      onClick: handleSeveranceRequestClick,
+      color: "text-violet-500",
+    },
+    {
+      label: "Graduation Status",
+      icon: FiAward,
+      href: "/graduation-status",
+      color: "text-pink-700",
+    },
+    {
+      label: "Messages",
+      icon: FiMessageSquare,
+      href: "/messages",
+      color: "text-orange-700",
+    },
+    {
+      label: "Settings",
+      icon: FiSettings,
+      href: "/profile",
+      color: "text-emerald-500",
+    },
+  ];
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className={cn(
+        "relative h-screen w-[240px] border-r bg-white transition-all duration-300",
+        className
+      )}
+    >
+      <div className="flex h-full flex-col">
+        <div className="flex items-center justify-between p-4">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onToggle}
+              className="p-2 rounded hover:bg-gray-100"
+            >
+              <FiMenu size={20} />
+            </button>
+            <span className="font-bold text-lg">Menu</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onToggle}
+            className="h-8 w-8"
+            aria-label="Close sidebar"
+          >
+            <FiChevronLeft className="h-4 w-4" />
+          </Button>
+        </div>
+        <ScrollArea className="flex-1 px-3">
+          <div className="space-y-1 py-2">
+            {routes.map((route) =>
+              route.href ? (
+                <Link
+                  key={route.label}
+                  href={route.href}
+                  className={cn(
+                    "flex items-center gap-x-2 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-gray-100 cursor-pointer",
+                    pathname === route.href
+                      ? "bg-gray-100 text-black"
+                      : "text-gray-600"
+                  )}
+                >
+                  <route.icon className={cn("h-5 w-5", route.color)} />
+                  <span>{route.label}</span>
+                </Link>
+              ) : (
+                <div
+                  key={route.label}
+                  onClick={route.onClick}
+                  className={cn(
+                    "flex items-center gap-x-2 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-gray-100 cursor-pointer",
+                    "text-gray-600"
+                  )}
+                >
+                  <route.icon className={cn("h-5 w-5", route.color)} />
+                  <span>{route.label}</span>
+                </div>
+              )
+            )}
+          </div>
+        </ScrollArea>
+      </div>
+    </div>
+  );
+} 
