@@ -7,7 +7,7 @@ import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
-
+import { useRouter } from 'next/navigation';
 interface Student {
   id: number;
   name: string;
@@ -20,7 +20,10 @@ interface Student {
   };
 }
 
+const ALLOWED_ROLES = ['studentAffairs'];
+
 export default function StudentAffairsClearancePage() {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [students, setStudents] = useState<Student[]>([{
     id: 301,
@@ -44,10 +47,15 @@ export default function StudentAffairsClearancePage() {
     },
   }]);
 
-  useEffect(() => {
-    const currentUser = authService.getCurrentUser();
-    if (currentUser) setUser(currentUser);
-  }, []);
+    useEffect(() => {
+      const currentUser = authService.getCurrentUser();
+      if (!currentUser || !ALLOWED_ROLES.includes(currentUser.role)) {
+        router.push('/unauthorized'); // izin yoksa yönlendir
+      } else {
+        setUser(currentUser); // izin varsa user'ı ayarla
+      }
+    }, []);
+
 
   const handleFinalize = (id: number, isApproved: boolean) => {
     const msg = isApproved
@@ -58,7 +66,13 @@ export default function StudentAffairsClearancePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {user && <Navbar userName={user.name} onLogout={() => authService.logout()} />}
+            {user && <Navbar
+        userName={user.name}
+        onLogout={() => authService.logout()}
+        onSidebarToggle={() => {}}
+        isSidebarOpen={true}
+      />
+}
       <main className="max-w-6xl mx-auto py-10 px-4">
         <Card>
           <CardHeader>

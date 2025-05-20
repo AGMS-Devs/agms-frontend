@@ -7,7 +7,7 @@ import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
-
+import { useRouter } from 'next/navigation';
 
 interface Student {
   id: number;
@@ -19,7 +19,10 @@ interface Student {
   };
 }
 
+const ALLOWED_ROLES = ['library'];
+
 export default function LibraryClearancePage() {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [students, setStudents] = useState<Student[]>([{
     id: 101,
@@ -37,10 +40,13 @@ export default function LibraryClearancePage() {
     department: 'Electrical Engineering',
     fines: { library: true, bookReturns: true },
   }]);
-
   useEffect(() => {
     const currentUser = authService.getCurrentUser();
-    if (currentUser) setUser(currentUser);
+    if (!currentUser || !ALLOWED_ROLES.includes(currentUser.role)) {
+      router.push('/unauthorized'); // izin yoksa yönlendir
+    } else {
+      setUser(currentUser); // izin varsa user'ı ayarla
+    }
   }, []);
 
   const handleApprove = (id: number) => {
@@ -53,7 +59,12 @@ export default function LibraryClearancePage() {
 
   return(
     <div className="min-h-screen bg-gray-50">
-      {user && <Navbar userName={user.name} onLogout={() => authService.logout()} />}
+      {user && <Navbar
+      userName={user.name}
+      onLogout={() => authService.logout()}
+      onSidebarToggle={() => {}}
+      isSidebarOpen={true}
+    />}
       <main className="max-w-6xl mx-auto py-10 px-4">
         <Card>
           <CardHeader>

@@ -7,6 +7,8 @@ import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
+import { useRouter } from 'next/navigation';
+
 interface Checklist {
   Library: string;
   SKS: string;
@@ -15,9 +17,11 @@ interface Checklist {
   'Student Affairs': string;
 }
 
+const ALLOWED_ROLES = ['student'];
+
 export default function StudentClearanceStatusPage() {
   const [user, setUser] = useState<User | null>(null);
-
+  const router = useRouter();
   const studentChecklist: Checklist = {
     Library: 'Approved',
     SKS: 'Pending',
@@ -26,14 +30,25 @@ export default function StudentClearanceStatusPage() {
     'Student Affairs': 'Approved',
   };
 
-  useEffect(() => {
-    const currentUser = authService.getCurrentUser();
-    if (currentUser) setUser(currentUser);
-  }, []);
+    useEffect(() => {
+      const currentUser = authService.getCurrentUser();
+      if (!currentUser || !ALLOWED_ROLES.includes(currentUser.role)) {
+        router.push('/unauthorized'); // izin yoksa yönlendir
+      } else {
+        setUser(currentUser); // izin varsa user'ı ayarla
+      }
+    }, []);
+
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {user && <Navbar userName={user.name} onLogout={() => authService.logout()} />}
+          {user && <Navbar
+      userName={user.name}
+      onLogout={() => authService.logout()}
+      onSidebarToggle={() => {}}
+      isSidebarOpen={true}
+      />
+        }
       <main className="max-w-2xl mx-auto py-10 px-4">
         <Card>
           <CardHeader>
