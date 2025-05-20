@@ -32,7 +32,8 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
     else if (role === "sks") router.push("/severance-requests/sks");
     else if (role === "doitp") router.push("/severance-requests/doitp");
     else if (role === "career") router.push("/severance-requests/careeroffice");
-    else if (role === "studentAffairs") router.push("/severance-requests/studentaffairs");
+    else if (role === "studentAffairs")
+      router.push("/severance-requests/studentaffairs");
     else router.push("/");
   };
 
@@ -58,7 +59,7 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
     {
       label: "Messages",
       icon: FiMessageSquare,
-      href: "/messages",
+      href: "/messages/inbox",
       color: "text-orange-700",
     },
     {
@@ -135,4 +136,4 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
       </div>
     </div>
   );
-} 
+}

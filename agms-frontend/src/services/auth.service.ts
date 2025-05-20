@@ -20,7 +20,7 @@ const mockUser: User = {
   email: "demo@std.iyte.edu.tr",
   name: "Demo User",
   department: "Computer Engineering",
-  role: "student", // 🎯 Değiştirerek test edebilirsin: 'library', 'sks', 'doitp', 'career', 'studentAffairs'
+  role: "advisor", // 🎯 Değiştirerek test edebilirsin: 'library', 'sks', 'doitp', 'career', 'studentAffairs'
   graduationStatus: {
     isEligible: true,
     requirements: {
