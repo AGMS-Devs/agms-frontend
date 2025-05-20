@@ -14,20 +14,152 @@ interface RegisterData {
   lastName: string;
 }
 
-// Mock user data for demo
-const mockUser: User = {
-  id: "1",
-  email: "demo@std.iyte.edu.tr",
-  name: "Demo User",
-  department: "Computer Engineering",
-  role: "facultyDeansOffice", // 🎯 Değiştirerek test edebilirsin: 'library', 'sks', 'doitp', 'career', 'studentAffairs', 'rectorate', "departmentSecretary", "facultyDeansOffice"
-  graduationStatus: {
-    isEligible: true,
-    requirements: {
-      tuitionPaid: true,
-      libraryBooksReturned: false,
-      studentCardReturned: true,
-      otherFeesPaid: true,
+// Mock users data for demo
+const mockUsers: Record<string, User> = {
+  "ataberkkizilirmak@std.iyte.edu.tr": {
+    id: "1",
+    email: "ataberkkizilirmak@std.iyte.edu.tr",
+    name: "Ataberk Kizilirmak",
+    department: "Computer Engineering",
+    role: "student",
+    graduationStatus: {
+      isEligible: true,
+      requirements: {
+        tuitionPaid: true,
+        libraryBooksReturned: true,
+        studentCardReturned: true,
+        otherFeesPaid: true,
+      },
+    },
+  },
+  
+
+  "faculty@iyte.edu.tr": {
+    id: "1",
+    email: "faculty@iyte.edu.tr",
+    name: "Faculty Dean User",
+    department: "Computer Engineering",
+    role: "facultyDeansOffice",
+    graduationStatus: {
+      isEligible: true,
+      requirements: {
+        tuitionPaid: true,
+        libraryBooksReturned: true,
+        studentCardReturned: true,
+        otherFeesPaid: true,
+      },
+    },
+  },
+  "library@iyte.edu.tr": {
+    id: "2",
+    email: "library@iyte.edu.tr",
+    name: "Library User",
+    department: "Library",
+    role: "library",
+    graduationStatus: {
+      isEligible: true,
+      requirements: {
+        tuitionPaid: true,
+        libraryBooksReturned: true,
+        studentCardReturned: true,
+        otherFeesPaid: true,
+      },
+    },
+  },
+  "sks@iyte.edu.tr": {
+    id: "3",
+    email: "sks@iyte.edu.tr",
+    name: "SKS User",
+    department: "Student Affairs",
+    role: "sks",
+    graduationStatus: {
+      isEligible: true,
+      requirements: {
+        tuitionPaid: true,
+        libraryBooksReturned: true,
+        studentCardReturned: true,
+        otherFeesPaid: true,
+      },
+    },
+  },
+  "doitp@iyte.edu.tr": {
+    id: "4",
+    email: "doitp@iyte.edu.tr",
+    name: "DOITP User",
+    department: "IT Department",
+    role: "doitp",
+    graduationStatus: {
+      isEligible: true,
+      requirements: {
+        tuitionPaid: true,
+        libraryBooksReturned: true,
+        studentCardReturned: true,
+        otherFeesPaid: true,
+      },
+    },
+  },
+  "career@iyte.edu.tr": {
+    id: "5",
+    email: "career@iyte.edu.tr",
+    name: "Career Center User",
+    department: "Career Center",
+    role: "career",
+    graduationStatus: {
+      isEligible: true,
+      requirements: {
+        tuitionPaid: true,
+        libraryBooksReturned: true,
+        studentCardReturned: true,
+        otherFeesPaid: true,
+      },
+    },
+  },
+  "student@iyte.edu.tr": {
+    id: "6",
+    email: "student@iyte.edu.tr",
+    name: "Student Affairs User",
+    department: "Student Affairs",
+    role: "studentAffairs",
+    graduationStatus: {
+      isEligible: true,
+      requirements: {
+        tuitionPaid: true,
+        libraryBooksReturned: true,
+        studentCardReturned: true,
+        otherFeesPaid: true,
+      },
+    },
+  },
+  "rector@iyte.edu.tr": {
+    id: "7",
+    email: "rector@iyte.edu.tr",
+    name: "Rectorate User",
+    department: "Rectorate",
+    role: "rectorate",
+    graduationStatus: {
+      isEligible: true,
+      requirements: {
+        tuitionPaid: true,
+        libraryBooksReturned: true,
+        studentCardReturned: true,
+        otherFeesPaid: true,
+      },
+    },
+  },
+  "secretary@iyte.edu.tr": {
+    id: "8",
+    email: "secretary@iyte.edu.tr",
+    name: "Department Secretary User",
+    department: "Computer Engineering",
+    role: "departmentSecretary",
+    graduationStatus: {
+      isEligible: true,
+      requirements: {
+        tuitionPaid: true,
+        libraryBooksReturned: true,
+        studentCardReturned: true,
+        otherFeesPaid: true,
+      },
     },
   },
 };
@@ -38,10 +170,17 @@ export const authService = {
   async login(email: string, password: string): Promise<AuthResponse> {
     try {
       if (email && password) {
-        localStorage.setItem(AUTH_KEY, JSON.stringify(mockUser));
+        const user = mockUsers[email];
+        if (user) {
+          localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+          return {
+            success: true,
+            data: user,
+          };
+        }
         return {
-          success: true,
-          data: mockUser,
+          success: false,
+          error: "Invalid credentials",
         };
       }
       return {
