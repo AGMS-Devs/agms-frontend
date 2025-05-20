@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Navbar } from '@/components/ui/navbar';
 import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
 import { useRouter } from 'next/navigation';
+import { Navbar } from '@/components/ui/navbar';
+import { Sidebar } from '@/components/ui/sidebar';
 
 interface Checklist {
   Library: string;
@@ -30,59 +31,51 @@ export default function StudentClearanceStatusPage() {
     'Student Affairs': 'Approved',
   };
 
-    useEffect(() => {
-      const currentUser = authService.getCurrentUser();
-      if (!currentUser || !ALLOWED_ROLES.includes(currentUser.role)) {
-        router.push('/unauthorized'); // izin yoksa yönlendir
-      } else {
-        setUser(currentUser); // izin varsa user'ı ayarla
-      }
-    }, []);
+  useEffect(() => {
+    const currentUser = authService.getCurrentUser();
+    if (!currentUser || !ALLOWED_ROLES.includes(currentUser.role)) {
+      router.push('/unauthorized');
+    } else {
+      setUser(currentUser);
+    }
+  }, []);
 
+  if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-          {user && <Navbar
-      userName={user.name}
-      onLogout={() => authService.logout()}
-      onSidebarToggle={() => {}}
-      isSidebarOpen={true}
-      />
-        }
-      <main className="max-w-2xl mx-auto py-10 px-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">My Clearance Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-3 text-sm">
-              {Object.entries(studentChecklist).map(([department, status]) => (
-                <li key={department} className="flex justify-between">
-                  <span className="font-medium text-gray-800">{department}</span>
-                  <span
-                    className={cn(
-                      'text-xs font-semibold px-2 py-1 rounded',
-                      status === 'Approved' && 'bg-green-100 text-green-700',
-                      status === 'Pending' && 'bg-yellow-100 text-yellow-700',
-                      status === 'Not Approved' && 'bg-red-100 text-red-700'
-                    )}
-                  >
-                    {status}
-                  </span>
-                </li>
-              ))}
-            </ul>
+    <main className="max-w-2xl mx-auto py-10 px-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">My Clearance Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-3 text-sm">
+            {Object.entries(studentChecklist).map(([department, status]) => (
+              <li key={department} className="flex justify-between">
+                <span className="font-medium text-gray-800">{department}</span>
+                <span
+                  className={cn(
+                    'text-xs font-semibold px-2 py-1 rounded',
+                    status === 'Approved' && 'bg-green-100 text-green-700',
+                    status === 'Pending' && 'bg-yellow-100 text-yellow-700',
+                    status === 'Not Approved' && 'bg-red-100 text-red-700'
+                  )}
+                >
+                  {status}
+                </span>
+              </li>
+            ))}
+          </ul>
 
-            <div className="mt-6">
-              {Object.values(studentChecklist).every((status) => status === 'Approved') ? (
-                <p className="text-green-700 font-semibold">🎉 Your clearance is fully approved!</p>
-              ) : (
-                <p className="text-yellow-700 font-medium">⚠️ Some approvals are still pending. Please check back later.</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+          <div className="mt-6">
+            {Object.values(studentChecklist).every((status) => status === 'Approved') ? (
+              <p className="text-green-700 font-semibold">🎉 Your clearance is fully approved!</p>
+            ) : (
+              <p className="text-yellow-700 font-medium">⚠️ Some approvals are still pending. Please check back later.</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </main>
   );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -8,7 +10,6 @@ import {
   FiMessageSquare,
   FiSettings,
   FiChevronLeft,
-  FiMenu,
 } from "react-icons/fi";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -175,24 +176,17 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
     return []; // unknown or unsupported role tyea safds alksdaf ksf
   })();
 
-  if (!isOpen) return null;
-
   return (
     <div
       className={cn(
-        "relative h-screen w-[240px] border-r bg-white transition-all duration-300",
+        "fixed left-0 top-0 h-screen w-[240px] border-r bg-white transition-all duration-700 ease-in-out",
+        isOpen ? "translate-x-0" : "-translate-x-full",
         className
       )}
     >
       <div className="flex h-full flex-col">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
-            <button
-              onClick={onToggle}
-              className="p-2 rounded hover:bg-gray-100"
-            >
-              <FiMenu size={20} />
-            </button>
             <span className="font-bold text-lg">Menu</span>
           </div>
           <Button
@@ -202,7 +196,7 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
             className="h-8 w-8"
             aria-label="Close sidebar"
           >
-            <FiChevronLeft className="h-4 w-4" />
+            <FiChevronLeft className={cn("h-4 w-4 transition-transform duration-700", !isOpen && "rotate-180")} />
           </Button>
         </div>
         <ScrollArea className="flex-1 px-3">
