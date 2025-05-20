@@ -10,7 +10,10 @@ export interface User {
     | "doitp"
     | "career"
     | "studentAffairs"
-    | "advisor"; // güncel roller burada
+    | "advisor"
+    | "rectorate"
+    | "facultyDeansOffice"
+    | "departmentSecretary"; // güncel roller burada
   graduationStatus: {
     isEligible: boolean;
     requirements: {

@@ -36,38 +36,63 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
     else router.push("/");
   };
 
-  const routes = [
-    {
-      label: "Home",
-      icon: FiHome,
-      href: "/home",
-      color: "text-sky-500",
-    },
-    {
-      label: "Severance Requests",
-      icon: FiClipboard,
-      onClick: handleSeveranceRequestClick,
-      color: "text-violet-500",
-    },
-    {
-      label: "Graduation Status",
-      icon: FiAward,
-      href: "/graduation-status",
-      color: "text-pink-700",
-    },
-    {
-      label: "Messages",
-      icon: FiMessageSquare,
-      href: "/messages",
-      color: "text-orange-700",
-    },
-    {
-      label: "Settings",
-      icon: FiSettings,
-      href: "/profile",
-      color: "text-emerald-500",
-    },
-  ];
+const routes = (() => {
+  const role = user?.role;
+
+  if (role === 'advisor') {
+    return [
+      { label: 'Home', icon: FiHome, href: '/home', color: 'text-sky-500' },
+      { label: 'Graduation Approval', icon: FiAward, href: '/graduation-approval', color: 'text-pink-700' },
+      { label: 'Messages', icon: FiMessageSquare, href: '/messages', color: 'text-orange-700' },
+      { label: 'Settings', icon: FiSettings, href: '/profile', color: 'text-emerald-500' },
+    ];
+  }
+
+  if (role === 'student') {
+    return [
+      { label: 'Home', icon: FiHome, href: '/home', color: 'text-sky-500' },
+      { label: 'Severance Requests', icon: FiClipboard, onClick: handleSeveranceRequestClick, color: 'text-violet-500' },
+      { label: 'Graduation Status', icon: FiAward, href: '/graduation-status', color: 'text-pink-700' },
+      { label: 'Messages', icon: FiMessageSquare, href: '/messages', color: 'text-orange-700' },
+      { label: 'Settings', icon: FiSettings, href: '/profile', color: 'text-emerald-500' },
+    ];
+  }
+
+  if (role && ['library', 'sks', 'doitp', 'career'].includes(role)) {
+    return [
+      { label: 'Home', icon: FiHome, href: '/home', color: 'text-sky-500' },
+      { label: 'Severance Requests', icon: FiClipboard, onClick: handleSeveranceRequestClick, color: 'text-violet-500' },
+      { label: 'Settings', icon: FiSettings, href: '/profile', color: 'text-emerald-500' },
+    ];
+  }
+
+  if (role === 'studentAffairs') {
+    return [
+      { label: 'Home', icon: FiHome, href: '/home', color: 'text-sky-500' },
+      { label: 'Severance Requests', icon: FiClipboard, onClick: handleSeveranceRequestClick, color: 'text-violet-500' },
+      { label: 'Graduation Approval', icon: FiAward, href: '/graduation-approval', color: 'text-pink-700' },
+      { label: 'Top Students', icon: FiAward, href: '/top-students', color: 'text-yellow-600' },
+    ];
+  }
+
+  if (role && ['departmentSecretary', 'facultyDeansOffice'].includes(role)) {
+    return [
+      { label: 'Home', icon: FiHome, href: '/home', color: 'text-sky-500' },
+      { label: 'Graduation Approval', icon: FiAward, href: '/graduation-approval', color: 'text-pink-700' },
+      { label: 'Settings', icon: FiSettings, href: '/profile', color: 'text-emerald-500' },
+    ];
+  }
+
+  if (role === 'rectorate') {
+    return [
+      { label: 'Home', icon: FiHome, href: '/home', color: 'text-sky-500' },
+      { label: 'Top Students', icon: FiAward, href: '/top-students', color: 'text-yellow-600' },
+      { label: 'Settings', icon: FiSettings, href: '/profile', color: 'text-emerald-500' },
+    ];
+  }
+
+  return []; // unknown or unsupported role
+})();
 
   if (!isOpen) return null;
 

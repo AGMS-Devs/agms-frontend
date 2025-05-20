@@ -7,7 +7,7 @@ import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
-
+import { useRouter } from 'next/navigation';
 interface Student {
   id: number;
   name: string;
@@ -15,7 +15,10 @@ interface Student {
   sksDebt: boolean;
 }
 
+const ALLOWED_ROLES = ['sks'];
+
 export default function SKSClearancePage() {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [students, setStudents] = useState<Student[]>([
     {
@@ -40,8 +43,13 @@ export default function SKSClearancePage() {
 
   useEffect(() => {
     const currentUser = authService.getCurrentUser();
-    if (currentUser) setUser(currentUser);
+    if (!currentUser || !ALLOWED_ROLES.includes(currentUser.role)) {
+      router.push('/unauthorized'); // izin yoksa yönlendir
+    } else {
+      setUser(currentUser); // izin varsa user'ı ayarla
+    }
   }, []);
+
 
   const handleApprove = (id: number) => {
     alert(`✅ Student ID ${id} SKS clearance approved.`);
@@ -53,7 +61,12 @@ export default function SKSClearancePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {user && <Navbar userName={user.name} onLogout={() => authService.logout()} />}
+      {user && <Navbar
+      userName={user.name}
+      onLogout={() => authService.logout()}
+      onSidebarToggle={() => {}}
+      isSidebarOpen={true}
+    />}
       <main className="max-w-6xl mx-auto py-10 px-4">
         <Card>
           <CardHeader>
