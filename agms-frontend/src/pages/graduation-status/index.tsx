@@ -1,30 +1,33 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { authService } from '@/services/auth.service';
-import { User } from '@/services/users.service';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { authService } from "@/services/auth.service";
+import { User } from "@/services/users.service";
 import { useToast } from "@/components/ui/use-toast";
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ProgressBar } from '@/components/ui/progress';
-import { Navbar } from '@/components/ui/navbar';
-
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ProgressBar } from "@/components/ui/progress";
+import { Navbar } from "@/components/ui/navbar";
+import "@/app/globals.css";
 export default function GraduationStatusPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const departmentRequirements: Record<string, {
-    ectsTotal: number;
-    minGpa: number;
-    requiredCourses: string[];
-  }> = {
-    'Computer Engineering': {
+  const departmentRequirements: Record<
+    string,
+    {
+      ectsTotal: number;
+      minGpa: number;
+      requiredCourses: string[];
+    }
+  > = {
+    "Computer Engineering": {
       ectsTotal: 150,
       minGpa: 2.0,
-      requiredCourses: ['CENG111', 'CENG112', 'CENG113'],
+      requiredCourses: ["CENG111", "CENG112", "CENG113"],
     },
     // Diğer bölümler...
   };
@@ -32,7 +35,7 @@ export default function GraduationStatusPage() {
   useEffect(() => {
     const currentUser = authService.getCurrentUser();
     if (!currentUser) {
-      router.push('/');
+      router.push("/");
     } else {
       setUser(currentUser);
     }
@@ -41,7 +44,9 @@ export default function GraduationStatusPage() {
 
   if (isLoading || !user) return null;
 
-  const req = departmentRequirements[user.department] || departmentRequirements['Computer Engineering'];
+  const req =
+    departmentRequirements[user.department] ||
+    departmentRequirements["Computer Engineering"];
 
   const graduation = {
     department: user.department,
@@ -55,47 +60,69 @@ export default function GraduationStatusPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar userName={user.name} onLogout={async () => {
-        await authService.logout();
-        router.push('/');
-      }} />
+      <Navbar
+        userName={user.name}
+        onLogout={async () => {
+          await authService.logout();
+          router.push("/");
+        }}
+      />
 
       <main className="max-w-3xl mx-auto py-10 px-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">{graduation.department}</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          {graduation.department}
+        </h1>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-xl">Graduation Status</CardTitle>
-            <Badge variant={graduation.eligibility ? 'success' : 'destructive'}>
-              {graduation.eligibility ? 'Complete' : 'Incomplete'}
+            <Badge variant={graduation.eligibility ? "success" : "destructive"}>
+              {graduation.eligibility ? "Complete" : "Incomplete"}
             </Badge>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <div className="text-sm font-medium text-gray-700">Graduation Eligibility</div>
+              <div className="text-sm font-medium text-gray-700">
+                Graduation Eligibility
+              </div>
               <div className="text-lg font-semibold text-gray-900">
-                {graduation.eligibility ? 'Complete' : 'Incomplete'}
+                {graduation.eligibility ? "Complete" : "Incomplete"}
               </div>
             </div>
             <div>
               <div className="flex items-center justify-between mb-1">
-                <span className="text-sm font-medium text-gray-700">ECTS Completed</span>
-                <span className="text-xs text-gray-600">{graduation.ectsCompleted}/{graduation.ectsTotal}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  ECTS Completed
+                </span>
+                <span className="text-xs text-gray-600">
+                  {graduation.ectsCompleted}/{graduation.ectsTotal}
+                </span>
               </div>
-              <ProgressBar value={graduation.ectsCompleted / graduation.ectsTotal * 100} />
+              <ProgressBar
+                value={(graduation.ectsCompleted / graduation.ectsTotal) * 100}
+              />
               <div className="text-xs text-gray-500 mt-1">
-                The student needs to complete {graduation.ectsTotal - graduation.ectsCompleted} more ECTS.
+                The student needs to complete{" "}
+                {graduation.ectsTotal - graduation.ectsCompleted} more ECTS.
               </div>
             </div>
             <div>
               <div className="text-sm font-medium text-gray-700">GPA</div>
               <div className="text-base text-gray-900">
-                Current GPA: <span className="font-semibold">{graduation.gpa}</span> {graduation.gpaEligible && <span className="ml-2 text-green-600 text-xs">(Eligible for graduation)</span>}
+                Current GPA:{" "}
+                <span className="font-semibold">{graduation.gpa}</span>{" "}
+                {graduation.gpaEligible && (
+                  <span className="ml-2 text-green-600 text-xs">
+                    (Eligible for graduation)
+                  </span>
+                )}
               </div>
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-700">Required Courses</div>
+              <div className="text-sm font-medium text-gray-700">
+                Required Courses
+              </div>
               <div className="text-base text-gray-900">
-                {graduation.requiredCourses.join(', ')}
+                {graduation.requiredCourses.join(", ")}
               </div>
             </div>
           </CardContent>

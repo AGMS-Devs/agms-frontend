@@ -10,7 +10,7 @@ import {
 } from "react-icons/fi";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { t, setLanguage, getLanguage } from "@/lib/i18n";
 import {
   DropdownMenu,
@@ -21,7 +21,8 @@ import {
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { authService } from "@/services/auth.service";
-import MessageModal from "./MessageModal"; // ✅ Modal bileşeni
+import { fetchInboxMessages } from "@/services/messageService";
+import MessageModal from "./MessageModal";
 
 interface NavbarProps {
   userName: string;
@@ -31,15 +32,29 @@ interface NavbarProps {
 export function Navbar({ userName, onLogout }: NavbarProps) {
   const router = useRouter();
   const [lang, setLang] = useState<"en" | "tr">(getLanguage());
-  const [isModalOpen, setIsModalOpen] = useState(false); // ✅ Modal kontrolü
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasUnread, setHasUnread] = useState(false);
+  const [previewMessages, setPreviewMessages] = useState<any[]>([]);
+
+  const user = authService.getCurrentUser();
+  const userId = user?.id;
+  const isAdvisor = user?.role === "advisor";
+  const isStudent = user?.role === "student";
 
   const handleLanguageChange = (newLang: "en" | "tr") => {
     setLang(newLang);
     setLanguage(newLang);
   };
 
-  const user = authService.getCurrentUser(); // ✅ Rol kontrolü için kullanıcı
-  const isAdvisor = user?.role === "advisor";
+  useEffect(() => {
+    if (!isStudent || !userId) return;
+
+    fetchInboxMessages(userId).then((messages) => {
+      const unreadExists = messages.some((msg: any) => msg.status === "unread");
+      setHasUnread(unreadExists);
+      setPreviewMessages(messages.slice(0, 3)); // sadece ilk 3 mesaj
+    });
+  }, [userId]);
 
   return (
     <nav className="flex items-center justify-between px-6 py-3 bg-white border-b shadow-sm sticky top-0 z-20">
@@ -54,7 +69,7 @@ export function Navbar({ userName, onLogout }: NavbarProps) {
         />
         <Link
           href="/home"
-          className="font-bold text-lg tracking-tight text-black hidden sm:inline "
+          className="font-bold text-lg tracking-tight text-black hidden sm:inline"
         >
           IZTECH - AGMS
         </Link>
@@ -69,7 +84,6 @@ export function Navbar({ userName, onLogout }: NavbarProps) {
 
         <button
           onClick={() => {
-            const user = authService.getCurrentUser();
             const role = user?.role;
 
             if (role === "student") router.push("/severance-requests/student");
@@ -91,12 +105,43 @@ export function Navbar({ userName, onLogout }: NavbarProps) {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="relative p-2 rounded hover:bg-gray-100">
-          <FiBell size={20} />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
-        </button>
+        {/* 🔔 Bildirim çanı - dropdown ile preview gösterimi */}
+        {isStudent && (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="relative p-2 rounded hover:bg-gray-100">
+              <FiBell size={20} />
+              {hasUnread && (
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
+              )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-80 max-h-96 overflow-auto p-2"
+            >
+              {previewMessages.length === 0 ? (
+                <p className="text-sm text-gray-500 px-2 py-1">No messages</p>
+              ) : (
+                previewMessages.map((msg) => (
+                  <div key={msg.id} className="text-sm border-b py-2">
+                    <p className="font-medium">From: {msg.senderId}</p>
+                    <p className="text-gray-700 line-clamp-2">{msg.body}</p>
+                    <p className="text-gray-400 text-xs">
+                      {new Date(msg.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                ))
+              )}
+              <DropdownMenuItem
+                onClick={() => router.push("/messages/inbox")}
+                className="cursor-pointer text-blue-600 text-sm justify-center mt-2"
+              >
+                View all messages
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
-        {/* ✅ Sadece Advisor için mesaj gönderme butonu */}
+        {/* ✉️ Advisor için mesaj gönderme */}
         {isAdvisor && (
           <>
             <button
@@ -126,6 +171,7 @@ export function Navbar({ userName, onLogout }: NavbarProps) {
           </>
         )}
 
+        {/* 🌐 Dil seçici */}
         <DropdownMenu>
           <DropdownMenuTrigger className="p-2 rounded hover:bg-gray-100">
             <FiGlobe size={20} />
@@ -146,6 +192,7 @@ export function Navbar({ userName, onLogout }: NavbarProps) {
           </DropdownMenuContent>
         </DropdownMenu>
 
+        {/* 👤 Kullanıcı menüsü */}
         <DropdownMenu>
           <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-1 rounded hover:bg-gray-100 cursor-pointer">
             <FiUser size={20} />
