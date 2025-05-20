@@ -27,9 +27,11 @@ import MessageModal from "./MessageModal";
 interface NavbarProps {
   userName: string;
   onLogout: () => void;
+  onSidebarToggle: () => void;
+  isSidebarOpen?: boolean;
 }
 
-export function Navbar({ userName, onLogout }: NavbarProps) {
+export function Navbar({ userName, onLogout, onSidebarToggle, isSidebarOpen }: NavbarProps) {
   const router = useRouter();
   const [lang, setLang] = useState<"en" | "tr">(getLanguage());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -52,56 +54,34 @@ export function Navbar({ userName, onLogout }: NavbarProps) {
     fetchInboxMessages(userId).then((messages) => {
       const unreadExists = messages.some((msg: any) => msg.status === "unread");
       setHasUnread(unreadExists);
-      setPreviewMessages(messages.slice(0, 3)); // sadece ilk 3 mesaj
+      setPreviewMessages(messages.slice(0, 3));
     });
   }, [userId]);
 
   return (
     <nav className="flex items-center justify-between px-6 py-3 bg-white border-b shadow-sm sticky top-0 z-20">
       <div className="flex items-center gap-4">
-        <button className="md:hidden p-2 rounded hover:bg-gray-100">
+        <button 
+          onClick={onSidebarToggle}
+          className="p-2 rounded hover:bg-gray-100"
+        >
           <FiMenu size={22} />
         </button>
-        <img
-          src="/iztech-logo.png"
-          alt="IZTECH Logo"
-          className="h-9 w-9 object-contain"
-        />
-        <Link
-          href="/home"
-          className="font-bold text-lg tracking-tight text-black hidden sm:inline"
-        >
-          IZTECH - AGMS
-        </Link>
-
-        <Link
-          href="/graduation-status"
-          className="flex items-center gap-1 text-gray-700 hover:text-blue-700 font-medium text-sm ml-4 transition-colors duration-200"
-        >
-          <FiAward size={16} />
-          Graduation Status
-        </Link>
-
-        <button
-          onClick={() => {
-            const role = user?.role;
-
-            if (role === "student") router.push("/severance-requests/student");
-            else if (role === "library")
-              router.push("/severance-requests/library");
-            else if (role === "sks") router.push("/severance-requests/sks");
-            else if (role === "doitp") router.push("/severance-requests/doitp");
-            else if (role === "career")
-              router.push("/severance-requests/careeroffice");
-            else if (role === "studentAffairs")
-              router.push("/severance-requests/studentaffairs");
-            else router.push("/");
-          }}
-          className="flex items-center gap-1 text-gray-700 hover:text-blue-700 font-medium text-sm ml-4 transition-colors duration-200"
-        >
-          <FiClipboard size={16} />
-          Severance Requests
-        </button>
+        {!isSidebarOpen && (
+          <>
+            <img
+              src="/iztech-logo.png"
+              alt="IZTECH Logo"
+              className="h-9 w-9 object-contain"
+            />
+            <Link
+              href="/home"
+              className="font-bold text-lg tracking-tight text-black hidden sm:inline"
+            >
+              IZTECH - AGMS
+            </Link>
+          </>
+        )}
       </div>
 
       <div className="flex items-center gap-4">

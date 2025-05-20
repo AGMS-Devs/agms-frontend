@@ -35,5 +35,17 @@
         "invalidEmail": "Please enter a valid email address"
       }
     }
+  },
+  "nav": {
+    "home": "Home",
+    "graduation": "Graduation",
+    "courses": "Courses",
+    "schedule": "Schedule",
+    "documents": "Documents"
+  },
+  "home": {
+    "welcome": "Welcome, {{name}}!",
+    "description": "This is the AGMS system. You are logged in as {{role}}.",
+    "graduationStatusInfo": "Graduation status is only visible for students. Please use the menu to access your role-specific features."
   }
 }
