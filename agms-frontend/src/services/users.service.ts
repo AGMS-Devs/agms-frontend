@@ -3,7 +3,14 @@ export interface User {
   email: string;
   name: string;
   department: string;
-    role: 'student' | 'library' | 'sks' | 'doitp' | 'career' | 'studentAffairs'; // güncel roller burada
+  role:
+    | "student"
+    | "library"
+    | "sks"
+    | "doitp"
+    | "career"
+    | "studentAffairs"
+    | "advisor"; // güncel roller burada
   graduationStatus: {
     isEligible: boolean;
     requirements: {
@@ -25,10 +32,10 @@ export const usersService = {
   async getCurrentUser(): Promise<ApiResponse<User>> {
     try {
       // TODO: Replace with actual API endpoint
-      const response = await fetch('/api/users/me', {
-        method: 'GET',
+      const response = await fetch("/api/users/me", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
@@ -37,18 +44,21 @@ export const usersService = {
     } catch (error) {
       return {
         success: false,
-        error: 'An unexpected error occurred.'
+        error: "An unexpected error occurred.",
       };
     }
   },
 
-  async updateUser(userId: string, userData: Partial<User>): Promise<ApiResponse<User>> {
+  async updateUser(
+    userId: string,
+    userData: Partial<User>
+  ): Promise<ApiResponse<User>> {
     try {
       // TODO: Replace with actual API endpoint
       const response = await fetch(`/api/users/${userId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
       });
@@ -58,18 +68,21 @@ export const usersService = {
     } catch (error) {
       return {
         success: false,
-        error: 'An unexpected error occurred.'
+        error: "An unexpected error occurred.",
       };
     }
   },
 
-  async updateGraduationStatus(userId: string, status: User['graduationStatus']): Promise<ApiResponse<User>> {
+  async updateGraduationStatus(
+    userId: string,
+    status: User["graduationStatus"]
+  ): Promise<ApiResponse<User>> {
     try {
       // TODO: Replace with actual API endpoint
       const response = await fetch(`/api/users/${userId}/graduation-status`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(status),
       });
@@ -79,8 +92,8 @@ export const usersService = {
     } catch (error) {
       return {
         success: false,
-        error: 'An unexpected error occurred.'
+        error: "An unexpected error occurred.",
       };
     }
-  }
-}; 
+  },
+};

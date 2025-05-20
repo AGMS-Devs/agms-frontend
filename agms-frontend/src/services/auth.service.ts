@@ -16,11 +16,11 @@ interface RegisterData {
 
 // Mock user data for demo
 const mockUser: User = {
-  id: '1',
-  email: 'demo@std.iyte.edu.tr',
-  name: 'Demo User',
-  department: 'Computer Engineering',
-  role: 'studentAffairs', // 🎯 Değiştirerek test edebilirsin: 'library', 'sks', 'doitp', 'career', 'studentAffairs'
+  id: "1",
+  email: "demo@std.iyte.edu.tr",
+  name: "Demo User",
+  department: "Computer Engineering",
+  role: "advisor", // 🎯 Değiştirerek test edebilirsin: 'library', 'sks', 'doitp', 'career', 'studentAffairs'
   graduationStatus: {
     isEligible: true,
     requirements: {
@@ -32,7 +32,7 @@ const mockUser: User = {
   },
 };
 
-const AUTH_KEY = 'auth_demo_user';
+const AUTH_KEY = "auth_demo_user";
 
 export const authService = {
   async login(email: string, password: string): Promise<AuthResponse> {
@@ -46,12 +46,12 @@ export const authService = {
       }
       return {
         success: false,
-        error: 'Invalid credentials',
+        error: "Invalid credentials",
       };
     } catch (error) {
       return {
         success: false,
-        error: 'An unexpected error occurred.',
+        error: "An unexpected error occurred.",
       };
     }
   },
@@ -59,14 +59,14 @@ export const authService = {
   async register(data: RegisterData): Promise<AuthResponse> {
     return {
       success: true,
-      data: { message: 'Registration successful' },
+      data: { message: "Registration successful" },
     };
   },
 
   async forgotPassword(email: string): Promise<AuthResponse> {
     return {
       success: true,
-      data: { message: 'Password reset email sent' },
+      data: { message: "Password reset email sent" },
     };
   },
 
@@ -77,7 +77,7 @@ export const authService = {
     } catch (error) {
       return {
         success: false,
-        error: 'An unexpected error occurred.',
+        error: "An unexpected error occurred.",
       };
     }
   },
