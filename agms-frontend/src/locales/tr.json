@@ -35,5 +35,17 @@
         "invalidEmail": "Lütfen geçerli bir e-posta adresi giriniz"
       }
     }
+  },
+  "nav": {
+    "home": "Anasayfa",
+    "graduation": "Mezuniyet",
+    "courses": "Dersler",
+    "schedule": "Ders Programı",
+    "documents": "Belgeler"
+  },
+  "home": {
+    "welcome": "Hoş geldiniz, {{name}}!",
+    "description": "Bu AGMS sistemidir. {{role}} olarak giriş yaptınız.",
+    "graduationStatusInfo": "Mezuniyet durumu sadece öğrenciler için görünür. Lütfen menüyü kullanarak rolünüze özel özelliklere erişin."
   }
 }
