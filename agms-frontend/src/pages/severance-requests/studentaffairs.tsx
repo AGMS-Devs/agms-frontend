@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Navbar } from '@/components/ui/navbar';
 import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '@/components/ui/sidebar';
+import { Navbar } from '@/components/ui/navbar';
 interface Student {
   id: number;
   name: string;

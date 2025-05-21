@@ -9,6 +9,7 @@ import '@/app/globals.css';
 import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/ui/navbar';
 import { Sidebar } from '@/components/ui/sidebar';
+import PageLayout from "@/components/ui/PageLayout";
 
 interface Checklist {
   Library: string;

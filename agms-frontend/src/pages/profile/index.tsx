@@ -33,9 +33,9 @@ export default function ProfileSettings() {
     if (currentUser) {
       setFormData(prev => ({
         ...prev,
-        fullName: `${currentUser.firstName} ${currentUser.lastName}`,
-        email: currentUser.email,
-        department: currentUser.department
+        fullName: currentUser.name || '',
+        email: currentUser.email || '',
+        department: currentUser.department || ''
       }));
     } else {
       router.push('/');
@@ -228,6 +228,6 @@ export default function ProfileSettings() {
           </div>
         </main>
       </div>
-    </div>
+  </div>
   );
 }

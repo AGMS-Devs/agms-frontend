@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Navbar } from '@/components/ui/navbar';
+import PageLayout from '@/components/ui/PageLayout';
 import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
 import { Sidebar } from '@/components/ui/sidebar';
+import { Navbar } from '@/components/ui/navbar';
 interface Student {
   id: number;
   name: string;
@@ -52,6 +53,8 @@ export default function DoitpClearancePage() {
   const handleReject = (id: number) => {
     alert(`❌ Student ID ${id} DOITP clearance rejected.`);
   };
+  if (!user) return null;
+
   if (!user) return null;
 
   return (
