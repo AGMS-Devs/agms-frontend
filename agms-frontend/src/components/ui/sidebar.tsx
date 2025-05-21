@@ -179,8 +179,8 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
   return (
     <div
       className={cn(
-        "h-screen w-[240px] border-r bg-white transition-all duration-700 ease-in-out",
-        isOpen ? "block" : "hidden", // ya da translate-x gibi çözüm varsa devam ettir
+        "fixed left-0 top-0 h-screen w-[240px] border-r bg-white transition-all duration-700 ease-in-out",
+        isOpen ? "translate-x-0" : "-translate-x-full",
         className
       )}
     >
@@ -196,12 +196,7 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
             className="h-8 w-8"
             aria-label="Close sidebar"
           >
-            <FiChevronLeft
-              className={cn(
-                "h-4 w-4 transition-transform duration-700",
-                !isOpen && "rotate-180"
-              )}
-            />
+            <FiChevronLeft className={cn("h-4 w-4 transition-transform duration-700", !isOpen && "rotate-180")} />
           </Button>
         </div>
         <ScrollArea className="flex-1 px-3">
