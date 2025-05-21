@@ -97,7 +97,10 @@ export default function GraduationApprovalPage() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen((prev) => !prev)} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onToggle={() => setIsSidebarOpen((prev) => !prev)}
+      />
 
       {/* Main Content */}
       <div className="flex-1">
