@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Navbar } from '@/components/ui/navbar';
 import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
 import { useRouter } from 'next/navigation';
+import PageLayout from '@/components/ui/PageLayout';
 
 interface Student {
   id: number;
@@ -57,14 +57,10 @@ export default function LibraryClearancePage() {
     alert(`❌ Student ID ${id} library clearance rejected.`);
   };
 
-  return(
-    <div className="min-h-screen bg-gray-50">
-      {user && <Navbar
-      userName={user.name}
-      onLogout={() => authService.logout()}
-      onSidebarToggle={() => {}}
-      isSidebarOpen={true}
-    />}
+  if (!user) return null;
+
+  return (
+    <PageLayout>
       <main className="max-w-6xl mx-auto py-10 px-4">
         <Card>
           <CardHeader>
@@ -123,7 +119,7 @@ export default function LibraryClearancePage() {
           </CardContent>
         </Card>
       </main>
-    </div>
+    </PageLayout>
   );
 }
 

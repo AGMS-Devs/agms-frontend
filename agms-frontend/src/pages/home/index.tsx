@@ -6,10 +6,9 @@ import { useRouter } from 'next/router';
 import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { useToast } from "@/components/ui/use-toast";
-import { Navbar } from '@/components/ui/navbar';
-import { Sidebar } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import PageLayout from '@/components/ui/PageLayout';
 
 export default function HomePage() {
   const router = useRouter();
@@ -44,30 +43,19 @@ export default function HomePage() {
   if (isLoading || !user) return null;
 
   return (
-    <div className="flex h-screen">
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        onToggle={() => setIsSidebarOpen(!isSidebarOpen)} 
-      />
-      <div className="flex-1 flex flex-col">
-        <Navbar 
-          userName={user.name} 
-          onLogout={handleLogout} 
-          onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)} 
-        />
-        <main className="flex-1 p-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl">Welcome, {user.name}!</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="text-gray-700 text-base">
-                This is the AGMS system. You are logged in as <span className="font-semibold">{user.role.replace(/^(.)/, c => c.toUpperCase())}</span>.
-              </div>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
-    </div>
+    <PageLayout>
+      <main className="flex-1 p-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl">Welcome, {user.name}!</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-gray-700 text-base">
+              This is the AGMS system. You are logged in as <span className="font-semibold">{user.role.replace(/^(.)/, c => c.toUpperCase())}</span>.
+            </div>
+          </CardContent>
+        </Card>
+      </main>
+    </PageLayout>
   );
 }

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Navbar } from '@/components/ui/navbar';
+import PageLayout from '@/components/ui/PageLayout';
 import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
@@ -49,13 +49,7 @@ export default function CareerOfficeClearancePage() {
   if (loading || !user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar
-        userName={user.name}
-        onLogout={() => authService.logout()}
-        onSidebarToggle={() => {}}
-        isSidebarOpen={true}
-      />
+    <PageLayout>
       <main className="max-w-4xl mx-auto py-10 px-4">
         <Card>
           <CardHeader>
@@ -101,6 +95,6 @@ export default function CareerOfficeClearancePage() {
           </CardContent>
         </Card>
       </main>
-    </div>
+    </PageLayout>
   );
 }

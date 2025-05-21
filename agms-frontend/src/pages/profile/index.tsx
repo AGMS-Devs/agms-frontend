@@ -8,6 +8,7 @@ import { authService } from '@/services/auth.service';
 import { useRouter } from 'next/navigation';
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from 'lucide-react';
+import PageLayout from '@/components/ui/PageLayout';
 
 export default function ProfileSettings() {
   const router = useRouter();
@@ -27,9 +28,9 @@ export default function ProfileSettings() {
     if (currentUser) {
       setFormData(prev => ({
         ...prev,
-        fullName: `${currentUser.firstName} ${currentUser.lastName}`,
-        email: currentUser.email,
-        department: currentUser.department
+        fullName: currentUser.name || '',
+        email: currentUser.email || '',
+        department: currentUser.department || ''
       }));
     } else {
       router.push('/');
@@ -101,116 +102,118 @@ export default function ProfileSettings() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Profile Settings</h1>
-      
-      <div className="grid gap-6">
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Full Name</label>
-                <div className="relative">
-                  <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  <Input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    disabled
-                    className="pl-10 bg-gray-50"
-                  />
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Email</label>
-                <div className="relative">
-                  <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  <Input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    disabled
-                    className="pl-10 bg-gray-50"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Department</label>
-                <div className="relative">
-                  <FiBook className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  <Input
-                    type="text"
-                    name="department"
-                    value={formData.department}
-                    disabled
-                    className="pl-10 bg-gray-50"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t">
-              <h3 className="text-lg font-semibold mb-4">Change Password</h3>
+    <PageLayout>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold mb-6">Profile Settings</h1>
+        
+        <div className="grid gap-6">
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Current Password</label>
+                  <label className="text-sm font-medium">Full Name</label>
                   <div className="relative">
-                    <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <Input
-                      type="password"
-                      name="currentPassword"
-                      value={formData.currentPassword}
-                      onChange={handleChange}
-                      className="pl-10"
-                      required
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
+                      disabled
+                      className="pl-10 bg-gray-50"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Email</label>
+                  <div className="relative">
+                    <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <Input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      disabled
+                      className="pl-10 bg-gray-50"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">New Password</label>
+                  <label className="text-sm font-medium">Department</label>
                   <div className="relative">
-                    <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <FiBook className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <Input
-                      type="password"
-                      name="newPassword"
-                      value={formData.newPassword}
-                      onChange={handleChange}
-                      className="pl-10"
-                      required
-                      minLength={8}
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Confirm New Password</label>
-                  <div className="relative">
-                    <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                    <Input
-                      type="password"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      className="pl-10"
-                      required
+                      type="text"
+                      name="department"
+                      value={formData.department}
+                      disabled
+                      className="pl-10 bg-gray-50"
                     />
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex justify-end pt-4">
-              <Button type="submit" className="bg-[#8B0000] hover:bg-[#6B0000]">
-                Save Changes
-              </Button>
-            </div>
-          </form>
-        </Card>
+              <div className="pt-4 border-t">
+                <h3 className="text-lg font-semibold mb-4">Change Password</h3>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Current Password</label>
+                    <div className="relative">
+                      <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <Input
+                        type="password"
+                        name="currentPassword"
+                        value={formData.currentPassword}
+                        onChange={handleChange}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">New Password</label>
+                    <div className="relative">
+                      <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <Input
+                        type="password"
+                        name="newPassword"
+                        value={formData.newPassword}
+                        onChange={handleChange}
+                        className="pl-10"
+                        required
+                        minLength={8}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Confirm New Password</label>
+                    <div className="relative">
+                      <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <Input
+                        type="password"
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-4">
+                <Button type="submit" className="bg-[#8B0000] hover:bg-[#6B0000]">
+                  Save Changes
+                </Button>
+              </div>
+            </form>
+          </Card>
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 } 

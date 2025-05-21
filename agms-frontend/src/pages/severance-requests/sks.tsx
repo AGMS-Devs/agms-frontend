@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Navbar } from '@/components/ui/navbar';
 import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
 import { useRouter } from 'next/navigation';
+import PageLayout from '@/components/ui/PageLayout';
+
 interface Student {
   id: number;
   name: string;
@@ -50,7 +51,6 @@ export default function SKSClearancePage() {
     }
   }, []);
 
-
   const handleApprove = (id: number) => {
     alert(`✅ Student ID ${id} SKS clearance approved.`);
   };
@@ -59,14 +59,10 @@ export default function SKSClearancePage() {
     alert(`❌ Student ID ${id} SKS clearance rejected.`);
   };
 
+  if (!user) return null;
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {user && <Navbar
-      userName={user.name}
-      onLogout={() => authService.logout()}
-      onSidebarToggle={() => {}}
-      isSidebarOpen={true}
-    />}
+    <PageLayout>
       <main className="max-w-6xl mx-auto py-10 px-4">
         <Card>
           <CardHeader>
@@ -123,6 +119,6 @@ export default function SKSClearancePage() {
           </CardContent>
         </Card>
       </main>
-    </div>
+    </PageLayout>
   );
 }
