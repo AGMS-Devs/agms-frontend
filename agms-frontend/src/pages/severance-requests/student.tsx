@@ -23,6 +23,7 @@ const ALLOWED_ROLES = ['student'];
 export default function StudentClearanceStatusPage() {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const studentChecklist: Checklist = {
     Library: 'Approved',
     SKS: 'Pending',
@@ -43,7 +44,17 @@ export default function StudentClearanceStatusPage() {
   if (!user) return null;
 
   return (
-    <main className="max-w-2xl mx-auto py-10 px-4">
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(prev => !prev)} />
+
+      <div className="flex-1">
+        <Navbar
+          userName={user.name}
+          onLogout={() => authService.logout()}
+          onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
+          isSidebarOpen={isSidebarOpen}
+        />
+        <main className="max-w-4xl w-full mx-auto py-10 px-4">
       <Card>
         <CardHeader>
           <CardTitle className="text-lg font-semibold">My Clearance Status</CardTitle>
@@ -77,5 +88,8 @@ export default function StudentClearanceStatusPage() {
         </CardContent>
       </Card>
     </main>
+
+    </div>
+  </div>
   );
 }

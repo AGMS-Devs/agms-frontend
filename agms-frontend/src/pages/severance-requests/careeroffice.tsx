@@ -8,6 +8,7 @@ import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
+import { Sidebar } from '@/components/ui/sidebar';
 
 interface Student {
   id: number;
@@ -21,7 +22,8 @@ export default function CareerOfficeClearancePage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  
   const [students, setStudents] = useState<Student[]>([
     { id: 101, name: 'Ahmet Yılmaz', department: 'Computer Engineering' },
     { id: 102, name: 'Ayşe Demir', department: 'Mechanical Engineering' },
@@ -49,14 +51,18 @@ export default function CareerOfficeClearancePage() {
   if (loading || !user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar
-        userName={user.name}
-        onLogout={() => authService.logout()}
-        onSidebarToggle={() => {}}
-        isSidebarOpen={true}
-      />
-      <main className="max-w-4xl mx-auto py-10 px-4">
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(prev => !prev)} />
+
+      <div className="flex-1">
+        <Navbar
+          userName={user.name}
+          onLogout={() => authService.logout()}
+          onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
+          isSidebarOpen={isSidebarOpen}
+        />
+        <main className="max-w-4xl w-full mx-auto py-10 px-4">
+
         <Card>
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Career Office Clearance Requests</CardTitle>
@@ -102,5 +108,6 @@ export default function CareerOfficeClearancePage() {
         </Card>
       </main>
     </div>
+  </div>
   );
 }

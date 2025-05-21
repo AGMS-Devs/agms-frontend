@@ -161,6 +161,22 @@ const mockUsers: Record<string, User> = {
       },
     },
   },
+    "doitp@iyte.edu.tr": {
+    id: "9",
+    email: "doitp@iyte.edu.tr",
+    name: "Department of Information User",
+    department: "Computer Engineering",
+    role: "doitp",
+    graduationStatus: {
+      isEligible: true,
+      requirements: {
+        tuitionPaid: true,
+        libraryBooksReturned: true,
+        studentCardReturned: true,
+        otherFeesPaid: true,
+      },
+    },
+  },
 };
 
 const AUTH_KEY = "auth_demo_user";

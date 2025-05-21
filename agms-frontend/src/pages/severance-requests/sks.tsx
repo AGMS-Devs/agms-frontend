@@ -8,6 +8,7 @@ import { User } from '@/services/users.service';
 import { cn } from '@/lib/utils';
 import '@/app/globals.css';
 import { useRouter } from 'next/navigation';
+import { Sidebar } from '@/components/ui/sidebar';
 interface Student {
   id: number;
   name: string;
@@ -20,6 +21,7 @@ const ALLOWED_ROLES = ['sks'];
 export default function SKSClearancePage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [students, setStudents] = useState<Student[]>([
     {
       id: 201,
@@ -58,16 +60,19 @@ export default function SKSClearancePage() {
   const handleReject = (id: number) => {
     alert(`❌ Student ID ${id} SKS clearance rejected.`);
   };
-
+  if (!user) return null; 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {user && <Navbar
-      userName={user.name}
-      onLogout={() => authService.logout()}
-      onSidebarToggle={() => {}}
-      isSidebarOpen={true}
-    />}
-      <main className="max-w-6xl mx-auto py-10 px-4">
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(prev => !prev)} />
+
+      <div className="flex-1">
+        <Navbar
+          userName={user.name}
+          onLogout={() => authService.logout()}
+          onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
+          isSidebarOpen={isSidebarOpen}
+        />
+        <main className="max-w-4xl w-full mx-auto py-10 px-4">
         <Card>
           <CardHeader>
             <CardTitle className="text-lg font-semibold">Pending SKS Requests</CardTitle>
@@ -124,5 +129,6 @@ export default function SKSClearancePage() {
         </Card>
       </main>
     </div>
+  </div>
   );
 }

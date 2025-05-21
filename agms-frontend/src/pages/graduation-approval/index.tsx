@@ -1,10 +1,10 @@
-// src/app/graduation-approval/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Navbar } from "@/components/ui/navbar";
+import { Sidebar } from "@/components/ui/sidebar";
 import { authService } from "@/services/auth.service";
 import { User } from "@/services/users.service";
 
@@ -23,6 +23,7 @@ interface Student {
 export default function GraduationApprovalPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const [students, setStudents] = useState<Student[]>([
     {
@@ -94,106 +95,112 @@ export default function GraduationApprovalPage() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar
-        userName={user.name}
-        onLogout={() => authService.logout()}
-        onSidebarToggle={() => {}}
-        isSidebarOpen={true}
-      />
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar */}
+      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen((prev) => !prev)} />
 
-      <main className="max-w-4xl mx-auto py-10 px-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Graduation Approval
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {students.map((student) => {
-              const {
-                advisorStatus,
-                departmentSecretaryStatus,
-                facultyDeansOfficeStatus,
-                studentAffairsStatus,
-              } = student;
+      {/* Main Content */}
+      <div className="flex-1">
+        <Navbar
+          userName={user.name}
+          onLogout={() => authService.logout()}
+          onSidebarToggle={() => setIsSidebarOpen((prev) => !prev)}
+          isSidebarOpen={isSidebarOpen}
+        />
 
-              const currentStatus =
-                user.role === "advisor"
-                  ? advisorStatus
-                  : user.role === "departmentSecretary"
-                  ? departmentSecretaryStatus
-                  : user.role === "facultyDeansOffice"
-                  ? facultyDeansOfficeStatus
-                  : studentAffairsStatus;
+        <main className="max-w-4xl mx-auto py-10 px-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">
+                Graduation Approval
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {students.map((student) => {
+                const {
+                  advisorStatus,
+                  departmentSecretaryStatus,
+                  facultyDeansOfficeStatus,
+                  studentAffairsStatus,
+                } = student;
 
-              const isPreviousApproved =
-                user.role === "advisor" ||
-                (user.role === "departmentSecretary" &&
-                  advisorStatus === "Approved") ||
-                (user.role === "facultyDeansOffice" &&
-                  departmentSecretaryStatus === "Approved") ||
-                (user.role === "studentAffairs" &&
-                  facultyDeansOfficeStatus === "Approved");
+                const currentStatus =
+                  user.role === "advisor"
+                    ? advisorStatus
+                    : user.role === "departmentSecretary"
+                    ? departmentSecretaryStatus
+                    : user.role === "facultyDeansOffice"
+                    ? facultyDeansOfficeStatus
+                    : studentAffairsStatus;
 
-              const canTakeAction =
-                currentStatus === "Pending" && isPreviousApproved;
+                const isPreviousApproved =
+                  user.role === "advisor" ||
+                  (user.role === "departmentSecretary" &&
+                    advisorStatus === "Approved") ||
+                  (user.role === "facultyDeansOffice" &&
+                    departmentSecretaryStatus === "Approved") ||
+                  (user.role === "studentAffairs" &&
+                    facultyDeansOfficeStatus === "Approved");
 
-              return (
-                <div
-                  key={student.id}
-                  className="border rounded-lg p-4 bg-white shadow-sm space-y-1"
-                >
-                  <div className="font-medium text-gray-900">
-                    {student.name}
+                const canTakeAction =
+                  currentStatus === "Pending" && isPreviousApproved;
+
+                return (
+                  <div
+                    key={student.id}
+                    className="border rounded-lg p-4 bg-white shadow-sm space-y-1"
+                  >
+                    <div className="font-medium text-gray-900">
+                      {student.name}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {student.department}
+                    </div>
+
+                    <div className="text-sm mt-2 space-y-1">
+                      <div>
+                        <strong>Advisor:</strong> {advisorStatus}
+                      </div>
+                      <div>
+                        <strong>Department Secretary:</strong>{" "}
+                        {departmentSecretaryStatus}
+                      </div>
+                      <div>
+                        <strong>Faculty Dean's Office:</strong>{" "}
+                        {facultyDeansOfficeStatus}
+                      </div>
+                      <div>
+                        <strong>Student Affairs:</strong> {studentAffairsStatus}
+                      </div>
+                    </div>
+
+                    {canTakeAction && (
+                      <div className="space-x-2 mt-3">
+                        <button
+                          onClick={() =>
+                            updateStatus(student.id, user.role, "Approved")
+                          }
+                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() =>
+                            updateStatus(student.id, user.role, "Denied")
+                          }
+                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
+                        >
+                          Deny
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  <div className="text-sm text-gray-600">
-                    {student.department}
-                  </div>
-
-                  <div className="text-sm mt-2 space-y-1">
-                    <div>
-                      <strong>Advisor:</strong> {advisorStatus}
-                    </div>
-                    <div>
-                      <strong>Department Secretary:</strong>{" "}
-                      {departmentSecretaryStatus}
-                    </div>
-                    <div>
-                      <strong>Faculty Dean's Office:</strong>{" "}
-                      {facultyDeansOfficeStatus}
-                    </div>
-                    <div>
-                      <strong>Student Affairs:</strong> {studentAffairsStatus}
-                    </div>
-                  </div>
-
-                  {canTakeAction && (
-                    <div className="space-x-2 mt-3">
-                      <button
-                        onClick={() =>
-                          updateStatus(student.id, user.role, "Approved")
-                        }
-                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() =>
-                          updateStatus(student.id, user.role, "Denied")
-                        }
-                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
-                      >
-                        Deny
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </CardContent>
-        </Card>
-      </main>
+                );
+              })}
+            </CardContent>
+          </Card>
+        </main>
+      </div>
     </div>
   );
 }
