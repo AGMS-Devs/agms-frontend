@@ -32,7 +32,6 @@ const mockUsers: Record<string, User> = {
       },
     },
   },
-  
 
   "faculty@iyte.edu.tr": {
     id: "1",
@@ -82,12 +81,12 @@ const mockUsers: Record<string, User> = {
       },
     },
   },
-  "doitp@iyte.edu.tr": {
+  "advisor@iyte.edu.tr": {
     id: "4",
-    email: "doitp@iyte.edu.tr",
-    name: "DOITP User",
-    department: "IT Department",
-    role: "doitp",
+    email: "advisor@iyte.edu.tr",
+    name: "Advisor",
+    department: "Computer Engineering",
+    role: "advisor",
     graduationStatus: {
       isEligible: true,
       requirements: {
