@@ -1,5 +1,11 @@
 "use client";
 
+
+
+
+// TEST CASE 11 DEĞİŞECEK.
+
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,6 +16,7 @@ import {
   FiMessageSquare,
   FiSettings,
   FiChevronLeft,
+  FiUsers
 } from "react-icons/fi";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -130,9 +137,21 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
         },
         {
           label: "Top Students",
-          icon: FiAward,
+          icon: FiUsers,
           href: "/top-students",
-          color: "text-yellow-600",
+          color: "text-pink-700",
+        },
+        {
+          label: "Ceremony Planning",
+          icon: FiUsers,
+          href: "/ceremony",
+          color: "text-red-600", // İstersen burada farklı bir ikon da kullanabilirsin.
+        },
+        {
+          label: "Settings",
+          icon: FiSettings,
+          href: "/profile",
+          color: "text-emerald-500",
         },
       ];
     }
