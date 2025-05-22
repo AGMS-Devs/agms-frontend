@@ -5,6 +5,8 @@
 import { useEffect, useState } from "react";
 import { fetchInboxMessages } from "@/services/messageService";
 import { authService } from "@/services/auth.service";
+import '@/app/globals.css';
+
 
 export default function InboxPage() {
   const user = authService.getCurrentUser();

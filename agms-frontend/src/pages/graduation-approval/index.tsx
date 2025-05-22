@@ -7,6 +7,7 @@ import { Navbar } from "@/components/ui/navbar";
 import { Sidebar } from "@/components/ui/sidebar";
 import { authService } from "@/services/auth.service";
 import { User } from "@/services/users.service";
+import '@/app/globals.css';
 
 type Status = "Pending" | "Approved" | "Denied";
 

@@ -7,8 +7,8 @@ import { authService } from '@/services/auth.service';
 import { User } from '@/services/users.service';
 import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Link from 'next/link';
-import PageLayout from '@/components/ui/PageLayout';
+import { Sidebar } from '@/components/ui/sidebar';
+import { Navbar } from '@/components/ui/navbar';
 
 export default function HomePage() {
   const router = useRouter();
@@ -41,9 +41,20 @@ export default function HomePage() {
   };
 
   if (isLoading || !user) return null;
-
+  
   return (
-    <PageLayout>
+    <div className="flex min-h-screen bg-gray-50">
+          {/* Sidebar */}
+          <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(prev => !prev)} />
+    
+          {/* Main Content */}
+          <div className="flex-1">
+            <Navbar
+              userName={`${user.name}` || 'User'}
+              onLogout={() => authService.logout()}
+              onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
+              isSidebarOpen={isSidebarOpen}
+            />
       <main className="flex-1 p-6">
         <Card>
           <CardHeader>
@@ -56,6 +67,7 @@ export default function HomePage() {
           </CardContent>
         </Card>
       </main>
-    </PageLayout>
+    </div>
+    </div>
   );
 }

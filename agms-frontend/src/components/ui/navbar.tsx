@@ -67,22 +67,25 @@ export function Navbar({ userName, onLogout, onSidebarToggle, isSidebarOpen }: N
         >
           <FiMenu size={22} />
         </button>
-        {!isSidebarOpen && (
-          <>
-            <img
-              src="/iztech-logo.png"
-              alt="IZTECH Logo"
-              className="h-9 w-9 object-contain"
-            />
-            <Link
-              href="/home"
-              className="font-bold text-lg tracking-tight text-black hidden sm:inline"
-            >
-              IZTECH - AGMS
-            </Link>
-          </>
-        )}
+        {/* Logo ve metin kısmı */}
+        <div className="flex items-center gap-2">
+          <img
+            src="/iztech-logo.png"
+            alt="IZTECH Logo"
+            className="h-9 w-9 object-contain"
+          />
+          <Link
+            href="/home"
+            className={cn(
+              "font-bold text-lg tracking-tight text-black transition-all",
+              isSidebarOpen ? "hidden sm:inline" : "inline"
+            )}
+          >
+            IZTECH - AGMS
+          </Link>
+        </div>
       </div>
+
 
       <div className="flex items-center gap-4">
         {/* 🔔 Bildirim çanı - dropdown ile preview gösterimi */}

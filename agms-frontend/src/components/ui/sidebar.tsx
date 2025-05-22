@@ -177,13 +177,13 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
   })();
 
   return (
-    <div
-      className={cn(
-        "fixed left-0 top-0 h-screen w-[240px] border-r bg-white transition-all duration-700 ease-in-out",
-        isOpen ? "translate-x-0" : "-translate-x-full",
-        className
-      )}
-    >
+      <div
+        className={cn(
+          "h-screen w-[240px] border-r bg-white transition-all duration-700 ease-in-out",
+          isOpen ? "block" : "hidden",
+          className
+        )}
+      >
       <div className="flex h-full flex-col">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">

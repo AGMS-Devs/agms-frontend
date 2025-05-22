@@ -37,7 +37,7 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
         {/* Overlay when sidebar is open, below sidebar and navbar */}
         {isSidebarOpen && (
           <div
-            className="fixed inset-0 backdrop-blur-sm bg-transparent z-20 transition-opacity duration-300"
+            className="fixed inset-0  bg-transparent z-20 transition-opacity duration-300"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
