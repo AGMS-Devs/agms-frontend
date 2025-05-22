@@ -19,7 +19,9 @@ export default function InboxPage() {
   }, [studentId]);
 
   return (
-    <div className="p-6">
+    <div className="p-6 pl-[260px]">
+      {" "}
+      {/* ✅ SOLA BOŞLUK EKLENDİ */}
       <h2 className="text-xl font-bold mb-4">Inbox</h2>
       {messages.length === 0 ? (
         <p>No messages found.</p>
