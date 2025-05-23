@@ -161,20 +161,98 @@ export default function GraduationApprovalPage() {
                       {student.department}
                     </div>
 
-                    <div className="text-sm mt-2 space-y-1">
-                      <div>
-                        <strong>Advisor:</strong> {advisorStatus}
+                    <div className="flex flex-col mt-2 space-y-2">
+                      {/* 1. Advisor */}
+                      <div className="flex items-center space-x-2">
+                        <span>
+                          {advisorStatus === "Approved"
+                            ? "✅"
+                            : advisorStatus === "Denied"
+                            ? "❌"
+                            : "⏳"}
+                        </span>
+                        <span className="font-bold text-gray-700">1.</span>
+                        <span className="font-semibold">Advisor:</span>
+                        <span
+                          className={
+                            advisorStatus === "Approved"
+                              ? "text-green-600 font-bold"
+                              : advisorStatus === "Denied"
+                              ? "text-red-600 font-bold"
+                              : "text-gray-500"
+                          }
+                        >
+                          {advisorStatus}
+                        </span>
                       </div>
-                      <div>
-                        <strong>Department Secretary:</strong>{" "}
-                        {departmentSecretaryStatus}
+                      {/* 2. Department Secretary */}
+                      <div className="flex items-center space-x-2">
+                        <span>
+                          {departmentSecretaryStatus === "Approved"
+                            ? "✅"
+                            : departmentSecretaryStatus === "Denied"
+                            ? "❌"
+                            : "⏳"}
+                        </span>
+                        <span className="font-bold text-gray-700">2.</span>
+                        <span className="font-semibold">Department Secretary:</span>
+                        <span
+                          className={
+                            departmentSecretaryStatus === "Approved"
+                              ? "text-green-600 font-bold"
+                              : departmentSecretaryStatus === "Denied"
+                              ? "text-red-600 font-bold"
+                              : "text-gray-500"
+                          }
+                        >
+                          {departmentSecretaryStatus}
+                        </span>
                       </div>
-                      <div>
-                        <strong>Faculty Dean's Office:</strong>{" "}
-                        {facultyDeansOfficeStatus}
+                      {/* 3. Faculty Dean's Office */}
+                      <div className="flex items-center space-x-2">
+                        <span>
+                          {facultyDeansOfficeStatus === "Approved"
+                            ? "✅"
+                            : facultyDeansOfficeStatus === "Denied"
+                            ? "❌"
+                            : "⏳"}
+                        </span>
+                        <span className="font-bold text-gray-700">3.</span>
+                        <span className="font-semibold">Faculty Dean's Office:</span>
+                        <span
+                          className={
+                            facultyDeansOfficeStatus === "Approved"
+                              ? "text-green-600 font-bold"
+                              : facultyDeansOfficeStatus === "Denied"
+                              ? "text-red-600 font-bold"
+                              : "text-gray-500"
+                          }
+                        >
+                          {facultyDeansOfficeStatus}
+                        </span>
                       </div>
-                      <div>
-                        <strong>Student Affairs:</strong> {studentAffairsStatus}
+                      {/* 4. Student Affairs */}
+                      <div className="flex items-center space-x-2">
+                        <span>
+                          {studentAffairsStatus === "Approved"
+                            ? "✅"
+                            : studentAffairsStatus === "Denied"
+                            ? "❌"
+                            : "⏳"}
+                        </span>
+                        <span className="font-bold text-gray-700">4.</span>
+                        <span className="font-semibold">Student Affairs:</span>
+                        <span
+                          className={
+                            studentAffairsStatus === "Approved"
+                              ? "text-green-600 font-bold"
+                              : studentAffairsStatus === "Denied"
+                              ? "text-red-600 font-bold"
+                              : "text-gray-500"
+                          }
+                        >
+                          {studentAffairsStatus}
+                        </span>
                       </div>
                     </div>
 

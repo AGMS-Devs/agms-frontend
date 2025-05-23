@@ -3,6 +3,6 @@
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
   "/home": "pages/home.js",
-  "/top-students": "pages/top-students.js",
-  "/rectorate": "pages/rectorate.js"
+  "/rectorate": "pages/rectorate.js",
+  "/graduation-approval": "pages/graduation-approval.js"
 }
