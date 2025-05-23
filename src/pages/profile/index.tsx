@@ -23,6 +23,7 @@ export default function ProfileSettings() {
     fullName: '',
     email: '',
     department: '',
+    studentNo: '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
@@ -35,7 +36,8 @@ export default function ProfileSettings() {
         ...prev,
         fullName: currentUser.name || '',
         email: currentUser.email || '',
-        department: currentUser.department || ''
+        department: currentUser.department || '',
+        studentNo: currentUser.role === 'student' ? currentUser.id || '' : '',
       }));
     } else {
       router.push('/');
@@ -165,6 +167,22 @@ export default function ProfileSettings() {
                       />
                     </div>
                   </div>
+
+                  {formData.studentNo && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Student No</label>
+                      <div className="relative">
+                        <FiBook className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <Input
+                          type="text"
+                          name="studentNo"
+                          value={formData.studentNo}
+                          disabled
+                          className="pl-10 bg-gray-50"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-4 border-t">

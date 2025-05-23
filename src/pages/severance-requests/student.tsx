@@ -30,7 +30,7 @@ export default function StudentClearanceStatusPage() {
     SKS: 'Pending',
     DOITP: 'Approved',
     'Career Office': 'Not Approved',
-    'Student Affairs': 'Approved',
+    'Student Affairs': 'Not Approved',
   };
 
   useEffect(() => {
