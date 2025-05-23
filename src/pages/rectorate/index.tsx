@@ -6,6 +6,9 @@ import { Sidebar } from "@/components/ui/sidebar";
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
 import "@/app/globals.css";
+import { toast } from "@/components/ui/use-toast";
+import { authService } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
 
 interface Student {
   id: number;
@@ -30,6 +33,7 @@ export default function RectoratePage() {
   const [listReviewed, setListReviewed] = useState(false);
   const [listFinalized, setListFinalized] = useState(false);
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const handleReviewList = () => {
     setStudents(mockStudents);
@@ -43,6 +47,15 @@ export default function RectoratePage() {
       setMessage("Top Students List has been approved and finalized.");
     }
   };
+  4
+  const handleLogout = async () => {
+    await authService.logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+    });
+    router.push("/");
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -50,7 +63,7 @@ export default function RectoratePage() {
       <div className="flex-1">
         <Navbar
           userName="Rectorate"
-          onLogout={() => {}}
+          onLogout={handleLogout}
           onSidebarToggle={() => {}}
           isSidebarOpen={true}
         />
