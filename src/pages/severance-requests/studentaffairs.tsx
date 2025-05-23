@@ -9,6 +9,8 @@ import '@/app/globals.css';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '@/components/ui/sidebar';
 import { Navbar } from '@/components/ui/navbar';
+import { toast } from '@/components/ui/use-toast';
+
 interface Student {
   id: number;
   name: string;
@@ -65,6 +67,17 @@ export default function StudentAffairsClearancePage() {
       : `❌ Student ID ${id} has missing approvals. Cannot finalize.`;
     alert(msg);
   };
+
+  const handleLogout = async () => {
+    await authService.logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+      variant: "default"
+    });
+    router.push('/');
+  };
+
   if (!user) return null;
   return (
   <div className="flex min-h-screen bg-gray-50">
@@ -73,7 +86,7 @@ export default function StudentAffairsClearancePage() {
       <div className="flex-1">
         <Navbar
           userName={user.name}
-          onLogout={() => authService.logout()}
+          onLogout={handleLogout}
           onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
           isSidebarOpen={isSidebarOpen}
         />

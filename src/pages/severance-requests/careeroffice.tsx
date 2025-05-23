@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import '@/app/globals.css';
 import { Sidebar } from '@/components/ui/sidebar';
 import { Navbar } from '@/components/ui/navbar';
+import { toast } from '@/components/ui/use-toast';
 
 interface Student {
   id: number;
@@ -49,6 +50,7 @@ export default function CareerOfficeClearancePage() {
     alert(`❌ Student ID ${id} Career Office clearance rejected.`);
   };
 
+  const handleLogout = async () => {
   if (loading || !user) return null;
 
   return (
@@ -58,7 +60,10 @@ export default function CareerOfficeClearancePage() {
       <div className="flex-1">
         <Navbar
           userName={user.name}
-          onLogout={() => authService.logout()}
+          onLogout={async () => {
+            await authService.logout();
+            router.push('/');
+          }}
           onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
           isSidebarOpen={isSidebarOpen}
         />

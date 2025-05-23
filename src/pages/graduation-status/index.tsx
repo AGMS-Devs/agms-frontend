@@ -76,6 +76,16 @@ export default function GraduationStatusPage() {
     ectsCompleted >= req.ectsTotal &&
     missingCourses.length === 0;
 
+  const handleLogout = async () => {
+    await authService.logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+      variant: "default"
+    });
+    router.push('/');
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar
@@ -86,7 +96,7 @@ export default function GraduationStatusPage() {
       <div className="flex-1">
         <Navbar
           userName={user.name}
-          onLogout={() => authService.logout()}
+          onLogout={handleLogout}
           onSidebarToggle={() => setIsSidebarOpen((prev) => !prev)}
           isSidebarOpen={isSidebarOpen}
         />

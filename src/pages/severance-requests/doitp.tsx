@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from '@/components/ui/use-toast';
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import PageLayout from '@/components/ui/PageLayout';
@@ -53,7 +54,16 @@ export default function DoitpClearancePage() {
   const handleReject = (id: number) => {
     alert(`❌ Student ID ${id} DOITP clearance rejected.`);
   };
-  if (!user) return null;
+
+  const handleLogout = async () => {
+    await authService.logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+      variant: "default"
+    });
+    router.push('/');
+  };
 
   if (!user) return null;
 
@@ -64,7 +74,7 @@ export default function DoitpClearancePage() {
       <div className="flex-1">
         <Navbar
           userName={user.name}
-          onLogout={() => authService.logout()}
+          onLogout={handleLogout}
           onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
           isSidebarOpen={isSidebarOpen}
         />

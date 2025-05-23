@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { Navbar } from '@/components/ui/navbar';
 import { Sidebar } from '@/components/ui/sidebar';
 import PageLayout from "@/components/ui/PageLayout";
+import { toast } from "@/components/ui/use-toast";
 
 interface Checklist {
   Library: string;
@@ -42,6 +43,16 @@ export default function StudentClearanceStatusPage() {
     }
   }, []);
 
+  const handleLogout = async () => {
+    await authService.logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+      variant: "default"
+    });
+    router.push('/');
+  };
+
   if (!user) return null;
 
   return (
@@ -51,7 +62,7 @@ export default function StudentClearanceStatusPage() {
       <div className="flex-1">
         <Navbar
           userName={user.name}
-          onLogout={() => authService.logout()}
+          onLogout={handleLogout}
           onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
           isSidebarOpen={isSidebarOpen}
         />

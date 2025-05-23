@@ -51,7 +51,10 @@ export default function HomePage() {
           <div className="flex-1">
             <Navbar
               userName={`${user.name}` || 'User'}
-              onLogout={() => authService.logout()}
+              onLogout={async () => {
+                await authService.logout();
+                router.push('/');
+              }}
               onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
               isSidebarOpen={isSidebarOpen}
             />

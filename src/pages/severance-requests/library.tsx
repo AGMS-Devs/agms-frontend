@@ -9,6 +9,7 @@ import '@/app/globals.css';
 import { useRouter } from 'next/navigation';
 import { Sidebar } from '@/components/ui/sidebar';
 import { Navbar } from '@/components/ui/navbar';
+import { toast } from '@/components/ui/use-toast';
 
 interface Student {
   id: number;
@@ -59,6 +60,16 @@ export default function LibraryClearancePage() {
     alert(`❌ Student ID ${id} library clearance rejected.`);
   };
 
+  const handleLogout = async () => {
+    await authService.logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+      variant: "default"
+    });
+    router.push('/');
+  };
+
   if (!user) return null;
 
   return(
@@ -68,7 +79,7 @@ export default function LibraryClearancePage() {
       <div className="flex-1">
         <Navbar
           userName={user.name}
-          onLogout={() => authService.logout()}
+          onLogout={handleLogout}
           onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
           isSidebarOpen={isSidebarOpen}
         />

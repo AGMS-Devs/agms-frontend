@@ -10,6 +10,7 @@ import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import "@/app/globals.css";
+import { toast } from "@/components/ui/use-toast";
 
 interface Student {
   id: number;
@@ -51,6 +52,16 @@ export default function GraduationCeremonyPage() {
     alert("Graduation ceremony list approved successfully.");
   };
 
+  const handleLogout = async () => {
+    await authService.logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+      variant: "default"
+    });
+    router.push('/');
+  };
+
   if (!user) return null;
 
   return (
@@ -59,7 +70,7 @@ export default function GraduationCeremonyPage() {
       <div className="flex-1">
         <Navbar
           userName={user.name}
-          onLogout={() => authService.logout()}
+          onLogout={handleLogout}
           onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
           isSidebarOpen={isSidebarOpen}
         />
