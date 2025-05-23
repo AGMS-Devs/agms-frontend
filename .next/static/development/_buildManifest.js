@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 self.__BUILD_MANIFEST = (function(a){return {__rewrites:{afterFiles:[],beforeFiles:[],fallback:[]},__routerFilterStatic:a,__routerFilterDynamic:a,sortedPages:["\u002F_app"]}}(void 0));self.__BUILD_MANIFEST_CB && self.__BUILD_MANIFEST_CB()
-=======
-self.__BUILD_MANIFEST = (function(a){return {__rewrites:{afterFiles:[],beforeFiles:[],fallback:[]},__routerFilterStatic:a,__routerFilterDynamic:a,"/_error":["static\u002Fchunks\u002Fpages\u002F_error.js"],"/auth":["static\u002Fchunks\u002Fpages\u002Fauth.js"],"/home":["static\u002Fchunks\u002Fpages\u002Fhome.js"],"/rectorate":["static\u002Fchunks\u002Fpages\u002Frectorate.js"],sortedPages:["\u002F_app","\u002F_error","\u002Fauth","\u002Fhome","\u002Frectorate"]}}(void 0));self.__BUILD_MANIFEST_CB && self.__BUILD_MANIFEST_CB()
->>>>>>> 47092679192ccac6102a7d4ef2d83bafb7abd347

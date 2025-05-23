@@ -66,6 +66,10 @@ export default function RootLayout({
             {user && (
               <Navbar
                 userName={user.name}
+                onLogout={() => {
+                  authService.logout();
+                  router.push("/");
+                }}
                 onSidebarToggle={handleSidebarToggle}
                 isSidebarOpen={isSidebarOpen}
               />

@@ -58,7 +58,8 @@ export default function CareerOfficeClearancePage() {
       <div className="flex-1">
         <Navbar
           userName={user.name}
-          onSidebarToggle={() => setIsSidebarOpen((prev) => !prev)}
+          onLogout={() => authService.logout()}
+          onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
           isSidebarOpen={isSidebarOpen}
         />
         <main className="max-w-4xl w-full mx-auto py-10 px-4">

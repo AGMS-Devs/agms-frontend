@@ -10,7 +10,6 @@ import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import "@/app/globals.css";
-import { useToast } from "@/components/ui/use-toast";
 
 interface Student {
   id: number;
@@ -31,8 +30,6 @@ export default function GraduationCeremonyPage() {
   const [user, setUser] = useState<User | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [students, setStudents] = useState<Student[]>([]);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const { toast } = useToast();
 
   useEffect(() => {
     const currentUser = authService.getCurrentUser();
@@ -45,15 +42,9 @@ export default function GraduationCeremonyPage() {
   }, [router]);
 
   const handleSendInvitations = () => {
-    const updated = students.map(s =>
-      s.isEligible ? { ...s, invitationSent: true } : s
-    );
+    const updated = students.map(s => ({ ...s, invitationSent: true }));
     setStudents(updated);
-    toast({
-      title: "Invitations sent",
-      description: "Invitations sent to all eligible students.",
-      variant: "default",
-    });
+    alert("Invitations sent to all eligible students.");
   };
 
   const handleApproveList = () => {
@@ -68,7 +59,7 @@ export default function GraduationCeremonyPage() {
       <div className="flex-1">
         <Navbar
           userName={user.name}
- 
+          onLogout={() => authService.logout()}
           onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
           isSidebarOpen={isSidebarOpen}
         />
@@ -101,51 +92,17 @@ export default function GraduationCeremonyPage() {
                 </tbody>
               </table>
               <div className="flex gap-3 mt-6">
-                <Button
-                  onClick={() => setShowConfirm(true)}
-                  className="bg-sky-700 hover:bg-sky-800"
-                >
+                <Button onClick={handleSendInvitations} className="bg-sky-700 hover:bg-sky-800">
                   Generate Invitations
+                </Button>
+                <Button onClick={handleApproveList} className="bg-gray-600 hover:bg-gray-700">
+                  Approve List
                 </Button>
               </div>
             </CardContent>
           </Card>
         </main>
       </div>
-      {/* Confirm Modal */}
-      {showConfirm && (
-        <>
-          <div
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
-            aria-hidden="true"
-            onClick={() => setShowConfirm(false)}
-          />
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
-              <div className="text-lg font-semibold mb-4">
-                Are you sure you want to send invitations to all eligible students?
-              </div>
-              <div className="flex justify-end gap-2">
-                <button
-                  className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
-                  onClick={() => setShowConfirm(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="px-4 py-2 rounded bg-sky-700 text-white hover:bg-sky-800 font-semibold shadow-lg"
-                  onClick={() => {
-                    handleSendInvitations();
-                    setShowConfirm(false);
-                  }}
-                >
-                  Confirm
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
     </div>
   );
 }

@@ -1,13 +1,1 @@
-<<<<<<< HEAD
 {}
-=======
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/top-students": "pages/top-students.js",
-  "/home": "pages/home.js",
-  "/rectorate": "pages/rectorate.js",
-  "/auth": "pages/auth.js"
-}
->>>>>>> 47092679192ccac6102a7d4ef2d83bafb7abd347
