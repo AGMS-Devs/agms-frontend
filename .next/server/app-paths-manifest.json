@@ -1,6 +1,1 @@
-{
-  "/api/messages/route": "app/api/messages/route.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js",
-  "/messages/inbox/page": "app/messages/inbox/page.js"
-}
+{}
