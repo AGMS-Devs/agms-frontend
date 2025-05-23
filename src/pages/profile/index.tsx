@@ -111,7 +111,6 @@ export default function ProfileSettings() {
       <div className="flex-1">
         <Navbar
           userName={formData.fullName || 'User'}
-          onLogout={() => authService.logout()}
           onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
           isSidebarOpen={isSidebarOpen}
         />

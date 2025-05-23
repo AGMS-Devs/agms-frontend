@@ -26,12 +26,11 @@ import MessageModal from "./MessageModal";
 
 interface NavbarProps {
   userName: string;
-  onLogout: () => void;
   onSidebarToggle: () => void;
   isSidebarOpen?: boolean;
 }
 
-export function Navbar({ userName, onLogout, onSidebarToggle, isSidebarOpen }: NavbarProps) {
+export function Navbar({ userName, onSidebarToggle, isSidebarOpen }: NavbarProps) {
   const router = useRouter();
   const [lang, setLang] = useState<"en" | "tr">(getLanguage());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -191,7 +190,10 @@ export function Navbar({ userName, onLogout, onSidebarToggle, isSidebarOpen }: N
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              onClick={onLogout}
+              onClick={() => {
+                authService.logout();
+                router.push("/");
+              }}
               className="cursor-pointer text-[#8B0000]"
             >
               <FiLogOut className="mr-2 h-4 w-4" />

@@ -1,4 +1,4 @@
-// File: D:\AGMS_project2\agms-frontend\src\app\api\messages\route.ts
+// File: /home/mevlut/agmsss/agms-frontend/src/app/api/messages/route.ts
 import * as entry from '../../../../../src/app/api/messages/route.js'
 import type { NextRequest } from 'next/server.js'
 

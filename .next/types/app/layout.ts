@@ -1,4 +1,4 @@
-// File: D:\AGMS_project2\agms-frontend\src\app\layout.tsx
+// File: /home/mevlut/agmsss/agms-frontend/src/app/layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

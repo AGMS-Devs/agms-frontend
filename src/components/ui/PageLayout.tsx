@@ -26,10 +26,6 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
         <div className="relative z-40">
           <Navbar
             userName={user.name}
-            onLogout={() => {
-              authService.logout();
-              router.push("/");
-            }}
             onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)}
             isSidebarOpen={isSidebarOpen}
           />
