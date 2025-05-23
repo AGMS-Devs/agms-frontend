@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { authService } from '@/services/auth.service';
-import { User } from '@/services/users.service';
-import { cn } from '@/lib/utils';
-import '@/app/globals.css';
-import { useRouter } from 'next/navigation';
-import { Sidebar } from '@/components/ui/sidebar';
-import { Navbar } from '@/components/ui/navbar';
-import { toast } from '@/components/ui/use-toast';
+import { useEffect, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { authService } from "@/services/auth.service";
+import { User } from "@/services/users.service";
+import { cn } from "@/lib/utils";
+import "@/app/globals.css";
+import { useRouter } from "next/navigation";
+import { Sidebar } from "@/components/ui/sidebar";
+import { Navbar } from "@/components/ui/navbar";
+import { toast } from "@/components/ui/use-toast";
 
 interface Student {
   id: number;
@@ -21,32 +21,36 @@ interface Student {
   };
 }
 
-const ALLOWED_ROLES = ['library'];
+const ALLOWED_ROLES = ["library"];
 
 export default function LibraryClearancePage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [students, setStudents] = useState<Student[]>([{
-    id: 101,
-    name: 'Ahmet Yılmaz',
-    department: 'Computer Engineering',
-    fines: { library: false, bookReturns: true },
-  }, {
-    id: 102,
-    name: 'Ayşe Demir',
-    department: 'Mechanical Engineering',
-    fines: { library: true, bookReturns: false },
-  }, {
-    id: 103,
-    name: 'Mehmet Kaya',
-    department: 'Electrical Engineering',
-    fines: { library: true, bookReturns: true },
-  }]);
+  const [students, setStudents] = useState<Student[]>([
+    {
+      id: 101,
+      name: "Ahmet Yılmaz",
+      department: "Computer Engineering",
+      fines: { library: false, bookReturns: true },
+    },
+    {
+      id: 102,
+      name: "Ayşe Demir",
+      department: "Mechanical Engineering",
+      fines: { library: true, bookReturns: false },
+    },
+    {
+      id: 103,
+      name: "Mehmet Kaya",
+      department: "Electrical Engineering",
+      fines: { library: true, bookReturns: true },
+    },
+  ]);
   useEffect(() => {
     const currentUser = authService.getCurrentUser();
     if (!currentUser || !ALLOWED_ROLES.includes(currentUser.role)) {
-      router.push('/unauthorized'); // izin yoksa yönlendir
+      router.push("/unauthorized"); // izin yoksa yönlendir
     } else {
       setUser(currentUser); // izin varsa user'ı ayarla
     }
@@ -65,84 +69,101 @@ export default function LibraryClearancePage() {
     toast({
       title: "Logged out",
       description: "You have been successfully logged out.",
-      variant: "default"
+      variant: "default",
     });
-    router.push('/');
+    router.push("/");
   };
 
   if (!user) return null;
 
-  return(
+  return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen(prev => !prev)} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onToggle={() => setIsSidebarOpen((prev) => !prev)}
+      />
 
       <div className="flex-1">
         <Navbar
           userName={user.name}
           onLogout={handleLogout}
-          onSidebarToggle={() => setIsSidebarOpen(prev => !prev)}
+          onSidebarToggle={() => setIsSidebarOpen((prev) => !prev)}
           isSidebarOpen={isSidebarOpen}
         />
         <main className="max-w-4xl w-full mx-auto py-10 px-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">Pending Severance Requests</CardTitle>
-            <p className="text-sm text-muted-foreground">Review and process pending severance requests for the library</p>
-          </CardHeader>
-          <CardContent>
-            <table className="w-full border text-sm">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="p-2 text-left">Student ID</th>
-                  <th className="p-2 text-left">Name</th>
-                  <th className="p-2 text-left">Department</th>
-                  <th className="p-2 text-center">Library Fines</th>
-                  <th className="p-2 text-center">Book Returns</th>
-                  <th className="p-2 text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {students.map((student) => {
-                  const canApprove = !student.fines.library && student.fines.bookReturns;
-                  return (
-                    <tr key={student.id} className="border-b">
-                      <td className="p-2">{student.id}</td>
-                      <td className="p-2">{student.name}</td>
-                      <td className="p-2">{student.department}</td>
-                      <td className="p-2 text-center">
-                        <input type="checkbox" checked={student.fines.library} disabled />
-                      </td>
-                      <td className="p-2 text-center">
-                        <input type="checkbox" checked={student.fines.bookReturns} disabled />
-                      </td>
-                      <td className="p-2 text-center space-x-2">
-                        <button
-                          className={cn(
-                            'px-3 py-1 rounded text-white text-xs',
-                            canApprove ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-300 cursor-not-allowed'
-                          )}
-                          onClick={() => handleApprove(student.id)}
-                          disabled={!canApprove}
-                        >
-                          Approve
-                        </button>
-                        <button
-                          className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white text-xs"
-                          onClick={() => handleReject(student.id)}
-                        >
-                          Reject
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">
+                Pending Severance Requests
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Review and process pending severance requests for the library
+              </p>
+            </CardHeader>
+            <CardContent>
+              <table className="w-full border text-sm">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="p-2 text-left">Student ID</th>
+                    <th className="p-2 text-left">Name</th>
+                    <th className="p-2 text-left">Department</th>
+                    <th className="p-2 text-center">Library Fines</th>
+                    <th className="p-2 text-center">Book Returns</th>
+                    <th className="p-2 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.map((student) => {
+                    const canApprove =
+                      !student.fines.library && student.fines.bookReturns;
+                    return (
+                      <tr key={student.id} className="border-b">
+                        <td className="p-2">{student.id}</td>
+                        <td className="p-2">{student.name}</td>
+                        <td className="p-2">{student.department}</td>
+                        <td className="p-2 text-center">
+                          <input
+                            type="checkbox"
+                            checked={student.fines.library}
+                            disabled
+                          />
+                        </td>
+                        <td className="p-2 text-center">
+                          <input
+                            type="checkbox"
+                            checked={student.fines.bookReturns}
+                            disabled
+                          />
+                        </td>
+                        <td className="p-2 text-center space-x-2">
+                          <button
+                            className={cn(
+                              "px-3 py-1 rounded text-white text-xs",
+                              canApprove
+                                ? "bg-green-600 hover:bg-green-700"
+                                : "bg-gray-300 cursor-not-allowed"
+                            )}
+                            onClick={() => handleApprove(student.id)}
+                            disabled={!canApprove}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="px-3 py-1 rounded bg-red-600 hover:bg-red-700 text-white text-xs"
+                            onClick={() => handleReject(student.id)}
+                          >
+                            Reject
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
     </div>
   );
 }
-
