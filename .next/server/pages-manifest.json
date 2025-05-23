@@ -2,5 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/graduation-approval": "pages/graduation-approval.js"
+  "/top-students": "pages/top-students.js",
+  "/home": "pages/home.js",
+  "/rectorate": "pages/rectorate.js",
+  "/auth": "pages/auth.js"
 }

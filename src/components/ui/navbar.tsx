@@ -195,7 +195,7 @@ export function Navbar({ userName, onSidebarToggle, isSidebarOpen }: NavbarProps
             <DropdownMenuItem
               onClick={() => {
                 authService.logout();
-                router.push("/");
+                router.push("/auth?logoutSuccess=1");
               }}
               className="cursor-pointer text-[#8B0000]"
             >

@@ -1,14 +1,14 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { t, setLanguage, getLanguage } from "@/lib/i18n"
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useToast } from "@/components/ui/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 import { authService } from '@/services/auth.service'
@@ -16,6 +16,7 @@ import { authService } from '@/services/auth.service'
 export default function AuthPage() {
   const router = useRouter()
   const { toast } = useToast()
+  const searchParams = useSearchParams()
   const [mode, setMode] = useState<'login' | 'register' | 'forgot'>('login')
   const [lang, setLang] = useState<'en' | 'tr'>(getLanguage())
 
@@ -199,6 +200,13 @@ export default function AuthPage() {
     setLang(newLang)
     setLanguage(newLang)
   }
+
+  // Logout sonrası başarı mesajı göster
+  useEffect(() => {
+    if (searchParams?.get('logoutSuccess')) {
+      toast({ title: 'You have been successfully logged out.' });
+    }
+  }, [searchParams, toast]);
 
   return (
     <div
