@@ -1,8 +1,9 @@
 {
   "/_app": "pages/_app.js",
-  "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
-  "/home": "pages/home.js",
-  "/rectorate": "pages/rectorate.js",
-  "/graduation-approval": "pages/graduation-approval.js"
+  "/_document": "pages/_document.js",
+  "/graduation-approval": "pages/graduation-approval.js",
+  "/graduation-status": "pages/graduation-status.js",
+  "/severance-requests/student": "pages/severance-requests/student.js",
+  "/home": "pages/home.js"
 }
