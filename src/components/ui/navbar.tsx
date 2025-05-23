@@ -26,12 +26,11 @@ import MessageModal from "./MessageModal";
 
 interface NavbarProps {
   userName: string;
-  onLogout: () => void;
   onSidebarToggle: () => void;
   isSidebarOpen?: boolean;
 }
 
-export function Navbar({ userName, onLogout, onSidebarToggle, isSidebarOpen }: NavbarProps) {
+export function Navbar({ userName, onSidebarToggle, isSidebarOpen }: NavbarProps) {
   const router = useRouter();
   const [lang, setLang] = useState<"en" | "tr">(getLanguage());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,12 +60,15 @@ export function Navbar({ userName, onLogout, onSidebarToggle, isSidebarOpen }: N
   return (
     <nav className="flex items-center justify-between px-6 py-3 bg-white border-b shadow-sm sticky top-0 z-20">
       <div className="flex items-center gap-4">
-        <button 
-          onClick={onSidebarToggle}
-          className="p-2 rounded hover:bg-gray-100"
-        >
-          <FiMenu size={22} />
-        </button>
+        {/* Only show hamburger when sidebar is closed */}
+        {!isSidebarOpen && (
+          <button 
+            onClick={onSidebarToggle}
+            className="p-2 rounded hover:bg-gray-100"
+          >
+            <FiMenu size={22} />
+          </button>
+        )}
         {/* Logo ve metin kısmı */}
         <div className="flex items-center gap-2">
           <img
@@ -191,7 +193,10 @@ export function Navbar({ userName, onLogout, onSidebarToggle, isSidebarOpen }: N
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              onClick={onLogout}
+              onClick={() => {
+                authService.logout();
+                router.push("/auth?logoutSuccess=1");
+              }}
               className="cursor-pointer text-[#8B0000]"
             >
               <FiLogOut className="mr-2 h-4 w-4" />

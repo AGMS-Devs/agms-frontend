@@ -1,1 +1,8 @@
+<<<<<<< HEAD
 {}
+=======
+{
+  "/page": "app/page.js",
+  "/messages/inbox/page": "app/messages/inbox/page.js"
+}
+>>>>>>> 47092679192ccac6102a7d4ef2d83bafb7abd347
