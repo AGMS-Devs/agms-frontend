@@ -228,6 +228,7 @@ export default function TopStudentsPage() {
                 <Button
                   className="bg-green-700 hover:bg-green-800"
                   onClick={handleApproveList}
+                  disabled={students.length === 0}
                 >
                   Approve List
                 </Button>
