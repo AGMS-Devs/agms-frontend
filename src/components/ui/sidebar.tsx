@@ -180,7 +180,7 @@ export function Sidebar({ className, isOpen = true, onToggle }: SidebarProps) {
         {
           label: "Top Students",
           icon: FiAward,
-          href: "/rectorate",
+          href: "/top-students",
           color: "text-yellow-600",
         },
         {
