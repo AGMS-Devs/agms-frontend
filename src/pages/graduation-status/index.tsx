@@ -81,9 +81,9 @@ export default function GraduationStatusPage() {
     toast({
       title: "Logged out",
       description: "You have been successfully logged out.",
-      variant: "default"
+      variant: "default",
     });
-    router.push('/');
+    router.push("/");
   };
 
   return (
